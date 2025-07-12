@@ -3,9 +3,7 @@ package Views;
 import Services.AuthService;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.border.Border;
+
 
 public class Modulo1 extends JFrame {
     
@@ -15,13 +13,7 @@ public class Modulo1 extends JFrame {
     public Modulo1() {
         initComponents();
     }
-    private Border crearBordeRedondeado(int radio, Color color) {
-    return BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(color, 1),  // Borde exterior (1px de grosor)
-        BorderFactory.createEmptyBorder(5, 15, 5, 15)  // Margen interno (top, left, bottom, right)
-    );
-}
-    
+
     private void initComponents() {
         // Configuración básica de la ventana
         setTitle("Inicio de Sesión Usuario");
