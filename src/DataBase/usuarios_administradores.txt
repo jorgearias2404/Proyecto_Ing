@@ -1,0 +1,9 @@
+[USUARIO]
+username = usuario1
+password = clave123
+nombre = Juan Pérez
+
+[ADMIN]
+username = admin1
+password = admin456
+nombre = Ana López

@@ -4,13 +4,12 @@ import Services.AuthService;
 import javax.swing.*;
 import java.awt.*;
 
-
-public class Modulo1 extends JFrame {
+public class Login extends JFrame {
     
     private JTextField campoUsuario;
     private JPasswordField campoContraseña;
     
-    public Modulo1() {
+    public Login() {
         initComponents();
     }
 
@@ -38,8 +37,6 @@ public class Modulo1 extends JFrame {
         // Panel superior con botón Atrás
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelSuperior.setBackground(colorFondo);
-        
- 
         
         // Panel central para el formulario
         JPanel panelCentral = new JPanel();
@@ -140,40 +137,38 @@ public class Modulo1 extends JFrame {
         setLocationRelativeTo(null);
     }
     
-    private void validarLogin() {
-        String username = campoUsuario.getText();
-        String password = new String(campoContraseña.getPassword());
-        
-        if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, 
-                "Por favor complete todos los campos", 
-                "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Primero intenta como usuario normal
-        boolean loginExitoso = AuthService.validarLogin(username, password, false);
-        String rol = "Usuario";
-        
-        // Si falla, intenta como admin
-        if (!loginExitoso) {
-            loginExitoso = AuthService.validarLogin(username, password, true);
-            rol = "Administrador";
-        }
-
-        if (loginExitoso) {
-            String nombre = AuthService.obtenerNombre(username, rol.equals("Administrador"));
-            JOptionPane.showMessageDialog(this,
-                "Bienvenido " + nombre + " (" + rol + ")",
-                "Login exitoso",
-                JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            JOptionPane.showMessageDialog(this,
-                "Credenciales incorrectas",
-                "Error de autenticación",
-                JOptionPane.ERROR_MESSAGE);
-        }
+   private void validarLogin() {
+    String username = campoUsuario.getText();
+    String password = new String(campoContraseña.getPassword());
+    
+    if (username.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Complete todos los campos", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
     }
+
+    boolean loginExitoso = AuthService.validarLogin(username, password, false);
+    String rol = "Usuario";
+    
+    if (!loginExitoso) {
+        loginExitoso = AuthService.validarLogin(username, password, true);
+        rol = "Administrador";
+    }
+
+    if (loginExitoso) {
+        String nombre = AuthService.obtenerNombre(username, rol.equals("Administrador"));
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido " + nombre + " (" + rol + ")", 
+            "Login exitoso", 
+            JOptionPane.INFORMATION_MESSAGE);
+        this.dispose();
+        SwingUtilities.invokeLater(() -> new Op_Usuario().setVisible(true));
+    } else {
+        JOptionPane.showMessageDialog(this, 
+            "Credenciales incorrectas", 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
+    }
+}
     
     private void mostrarRegistro() {
         JOptionPane.showMessageDialog(this, "Funcionalidad de registro en desarrollo", 

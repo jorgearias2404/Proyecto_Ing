@@ -1,56 +1,44 @@
 package Services;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 
 public class AuthService {
-    private static final String ARCHIVO_USUARIOS = "DATABASE/usuarios_administradores.txt";
-    private static Map<String, Map<String, String>> usuarios = new HashMap<>();
-    private static Map<String, Map<String, String>> administradores = new HashMap<>();
+    // Credenciales hardcodeadas con estructura correcta
+    private static final Map<String, Map<String, String>> USUARIOS = new HashMap<>();
+    private static final Map<String, Map<String, String>> ADMINISTRADORES = new HashMap<>();
 
     static {
-        cargarDatos();
-    }
+        // Datos de usuarios normales
+        Map<String, String> usuario1 = new HashMap<>();
+        usuario1.put("password", "123");
+        usuario1.put("nombre", "Usuario Test");
+        USUARIOS.put("test", usuario1);
 
-    private static void cargarDatos() {
-        try (BufferedReader br = new BufferedReader(new FileReader(ARCHIVO_USUARIOS))) {
-            String linea;
-            String seccionActual = null;
-            Map<String, String> datosActual = null;
+        Map<String, String> usuario2 = new HashMap<>();
+        usuario2.put("password", "clave123");
+        usuario2.put("nombre", "Usuario Normal");
+        USUARIOS.put("user", usuario2);
 
-            while ((linea = br.readLine()) != null) {
-                linea = linea.trim();
-                if (linea.startsWith("[") && linea.endsWith("]")) {
-                    seccionActual = linea.substring(1, linea.length() - 1);
-                    if ("USUARIO".equals(seccionActual)) {
-                        datosActual = new HashMap<>();
-                    } else if ("ADMIN".equals(seccionActual)) {
-                        datosActual = new HashMap<>();
-                    }
-                } else if (datosActual != null && linea.contains("=")) {
-                    String[] partes = linea.split("=", 2);
-                    datosActual.put(partes[0].trim(), partes[1].trim());
-                    if ("USUARIO".equals(seccionActual)) {
-                        usuarios.put(datosActual.get("username"), datosActual);
-                    } else if ("ADMIN".equals(seccionActual)) {
-                        administradores.put(datosActual.get("username"), datosActual);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // Datos de administradores
+        Map<String, String> admin1 = new HashMap<>();
+        admin1.put("password", "456");
+        admin1.put("nombre", "Admin Principal");
+        ADMINISTRADORES.put("admin", admin1);
+
+        Map<String, String> admin2 = new HashMap<>();
+        admin2.put("password", "admin123");
+        admin2.put("nombre", "Admin Secundario");
+        ADMINISTRADORES.put("admin1", admin2);
     }
 
     public static boolean validarLogin(String username, String password, boolean esAdmin) {
-        Map<String, String> userData = esAdmin ? administradores.get(username) : usuarios.get(username);
-        return userData != null && userData.get("password").equals(password);
+        Map<String, String> credenciales = esAdmin ? ADMINISTRADORES.get(username) : USUARIOS.get(username);
+        return credenciales != null && credenciales.get("password").equals(password);
     }
 
     public static String obtenerNombre(String username, boolean esAdmin) {
-        Map<String, String> userData = esAdmin ? administradores.get(username) : usuarios.get(username);
-        return userData != null ? userData.get("nombre") : null;
+        Map<String, String> datos = esAdmin ? ADMINISTRADORES.get(username) : USUARIOS.get(username);
+        return datos != null ? datos.get("nombre") : "Invitado";
     }
 }
