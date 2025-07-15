@@ -1,4 +1,3 @@
-
 package Views;
 
 import javax.swing.*;
@@ -109,17 +108,32 @@ public class MenuComedorUniversitario {
             panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
         }
 
-        // boton para guardar selecciones
+        
+        // Botón para guardar selecciones
         JButton botonGuardar = new JButton("Guardar Selecciones");
-        botonGuardar.setBackground(COLOR_BOTON);
-        botonGuardar.setForeground(COLOR_BOTON_TEXTO);
-        botonGuardar.setFont(new Font("Arial", Font.BOLD, 14));
+        estiloBoton(botonGuardar, COLOR_BOTON, COLOR_BOTON_TEXTO);
         botonGuardar.addActionListener(e -> guardarSelecciones());
-
         panelPrincipal.add(botonGuardar);
-        ventana.add(new JScrollPane(panelPrincipal));
-        ventana.setVisible(true);
-    }
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 10))); 
+
+      // Botón ATRÁS
+      JButton botonAtras = new JButton("Atrás");
+      estiloBoton(botonAtras, COLOR_BOTON, COLOR_BOTON_TEXTO);
+      botonAtras.addActionListener(e -> ventana.dispose()); 
+      panelPrincipal.add(botonAtras);
+
+       // agregar scroll y mostrar
+       ventana.add(new JScrollPane(panelPrincipal));
+       ventana.setVisible(true);
+    }  
+        
+    private static void estiloBoton(JButton boton, Color fondo, Color texto) {
+       boton.setBackground(fondo);
+       boton.setForeground(texto);
+       boton.setFocusPainted(false);
+       boton.setFont(new Font("Arial", Font.BOLD, 14));
+       boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+}
 
     // metodo para crear un panel de comida 
     private static JPanel crearPanelComida(String tipo, String[] comidas, String rutaImagen, String diaComida) {
