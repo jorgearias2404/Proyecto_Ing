@@ -78,12 +78,6 @@ public class Op_Usuario extends JFrame {
             }
         });
 
-        // Botón RESERVAR TURNO DE COMIDA
-        JButton botonComida = new JButton("RESERVAR TURNO DE COMIDA");
-        estiloBoton(botonComida, colorBoton, colorBotonTexto);
-        panelPrincipal.add(botonComida);
-        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 30)));
-
         // Botón CERRAR
         JButton botonAtras = new JButton("CERRAR");
         estiloBoton(botonAtras, colorBoton, colorBotonTexto);
