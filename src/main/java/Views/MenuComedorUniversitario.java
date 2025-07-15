@@ -1,4 +1,4 @@
-package Views;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -116,10 +116,10 @@ public class MenuComedorUniversitario {
         panelPrincipal.add(botonGuardar);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 10))); 
 
-      // Botón ATRÁS
+      // Boton atras
       JButton botonAtras = new JButton("Atrás");
       estiloBoton(botonAtras, COLOR_BOTON, COLOR_BOTON_TEXTO);
-      botonAtras.addActionListener(e -> ventana.dispose()); 
+      botonAtras.addActionListener(e -> abrirOpUsuario(ventana)); // me regreso a la ventana anterior 
       panelPrincipal.add(botonAtras);
 
        // agregar scroll y mostrar
@@ -184,6 +184,12 @@ public class MenuComedorUniversitario {
 
         return panel;
     }
+
+    // metodo abrirOpUsuario
+    private static void abrirOpUsuario(JFrame ventanaActual) {
+    ventanaActual.dispose();
+    SwingUtilities.invokeLater(() -> Op_Usuario.main(new String[]{}));
+}
 
     // metodo para guardar selecciones 
     private static void guardarSelecciones() {
