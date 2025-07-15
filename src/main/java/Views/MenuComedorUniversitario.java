@@ -56,7 +56,7 @@ public class MenuComedorUniversitario {
 
         // imagenes
         String[] imagenesDesayuno = {
-                "comedor.png",
+                "desayuno.png",
                 "desayuno2.png",
                 "desayuno3.png",
                 "desayuno4.png",
