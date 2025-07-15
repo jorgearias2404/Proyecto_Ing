@@ -66,14 +66,26 @@ public class Op_Usuario extends JFrame {
         panelPrincipal.add(botonHistorial);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
+        // Botón RECARGAR MONEDERO
+        JButton botonRecargar = new JButton("RECARGAR MONEDERO");
+        estiloBoton(botonRecargar, colorBoton, colorBotonTexto);
+        panelPrincipal.add(botonRecargar);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+         botonRecargar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirMonedero();
+            }
+        });
+
         // Botón RESERVAR TURNO DE COMIDA
         JButton botonComida = new JButton("RESERVAR TURNO DE COMIDA");
         estiloBoton(botonComida, colorBoton, colorBotonTexto);
         panelPrincipal.add(botonComida);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // Botón ATRÁS
-        JButton botonAtras = new JButton("Atras");
+        // Botón CERRAR
+        JButton botonAtras = new JButton("CERRAR");
         estiloBoton(botonAtras, colorBoton, colorBotonTexto);
         botonAtras.addActionListener(new ActionListener() {
             @Override
@@ -111,6 +123,20 @@ public class Op_Usuario extends JFrame {
             }
         });
     }
+
+    private void abrirMonedero() {
+        // Cierra la ventana actual
+        this.dispose();
+        
+        // Abre el menú del comedor usando su método main
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                MonederoEstudiantil.main(new String[]{});
+            }
+        });
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
