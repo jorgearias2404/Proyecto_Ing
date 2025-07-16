@@ -105,7 +105,7 @@ public class Login extends JFrame {
         btnRegistrarse.addActionListener(this::mostrarRegistro);
         panelCentral.add(btnRegistrarse);
 
-        panelPrincipal.add(panelCentral, BorderLayout.CENTER);
+        panelPrincipal.add(panelCentral, BorderLayout.CENTER); 
         add(panelPrincipal);
         setLocationRelativeTo(null);
     }
@@ -154,4 +154,8 @@ public class Login extends JFrame {
             new Login().setVisible(true);
         });
     }
-}
+} 
+
+
+
+

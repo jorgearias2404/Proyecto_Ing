@@ -2,9 +2,16 @@ package Views;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MonederoEstudiantil extends JFrame {
 
@@ -19,17 +26,19 @@ public class MonederoEstudiantil extends JFrame {
      Color COLOR_ETIQUETAS = new Color(180, 220, 240);
 
     // componentes
-    private JTextField campoCedula, campoTelefono, campoMonto;
+    private JTextField campoCedula,campoTelefono, campoMonto;
     private JComboBox<String> comboBanco;
     private JLabel labelSaldo, labelMensaje;
     private JTextArea areaHistorial;
     private double saldo = 0.0;
     private DecimalFormat formato = new DecimalFormat("$#,##0.00");
-
+    private Map<String, Estudiante> baseDatos = new HashMap<>();
+ 
     public MonederoEstudiantil() {
         configurarVentana();
         crearComponentes();
         configurarLayout();
+        cargarBaseDatos();
     }
 
     private void configurarVentana() {
@@ -142,6 +151,16 @@ public class MonederoEstudiantil extends JFrame {
         botonRecargar.setFont(new Font("Arial", Font.BOLD, 12));
         botonRecargar.addActionListener(e -> procesarRecarga());
         panelCentral.add(botonRecargar, gbc);
+          
+        // boton de regresar
+        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        JButton botonRegresar = new JButton("Regresar");
+        botonRegresar.setBackground(COLOR_BOTON);
+        botonRegresar.setForeground(COLOR_FONDO);
+        botonRegresar.setFont(new Font("Arial", Font.BOLD, 12));
+        botonRegresar.addActionListener(e -> regresarUsuario());
+        panelCentral.add(botonRegresar, gbc);
 
         // panel del historial
         JScrollPane scrollHistorial = new JScrollPane(areaHistorial);
@@ -169,26 +188,42 @@ public class MonederoEstudiantil extends JFrame {
     }
 
     private void procesarRecarga() {
-        if (!validarCampos()) return;
+    if (!validarCampos()) return;
 
-        double monto = Double.parseDouble(campoMonto.getText().trim());
-        saldo += monto;
-        labelSaldo.setText("Saldo: " + formato.format(saldo));
+    String cedula = campoCedula.getText().trim();
+    String telefono = campoTelefono.getText().trim();
+    String banco = (String) comboBanco.getSelectedItem();
+    double monto = Double.parseDouble(campoMonto.getText().trim());
 
-        // registrar en historial
-        String registro = String.format("[%s] Recarga: %s - Banco: %s\n",
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")),
-            formato.format(monto),
-            comboBanco.getSelectedItem()
-        );
-        areaHistorial.append(registro);
-
-        limpiarCampos();
-        labelMensaje.setText("¡Recarga exitosa!");
-        labelMensaje.setForeground(COLOR_EXITO);
+    // verificar si el estudiante ya existe o crear uno nuevo
+    Estudiante estudiante = baseDatos.get(cedula);
+    if (estudiante == null) {
+        estudiante = new Estudiante(cedula, "Nombre no registrado", telefono, banco, 0.0, "");
+        baseDatos.put(cedula, estudiante);
     }
 
-   
+    // actualizar saldo
+    estudiante.saldo += monto;
+    saldo = estudiante.saldo; // actualiza el saldo mostrado
+    
+    // registrar en historial
+    String transaccion = String.format("[%s] Recarga: %s - Banco: %s\n",
+        LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")),
+        formato.format(monto),
+        banco
+    );
+    estudiante.historial += transaccion;
+    areaHistorial.append(transaccion);
+
+    // actualizar interfaz
+    labelSaldo.setText("Saldo: " + formato.format(saldo));
+    limpiarCampos();
+    labelMensaje.setText("¡Recarga exitosa!");
+    labelMensaje.setForeground(COLOR_EXITO);
+    
+    guardarBaseDatos();
+}
+
      private boolean validarCampos() {
 
     // validar cedula 
@@ -261,6 +296,60 @@ private void mostrarError(String mensaje) {
         campoTelefono.setText("");
         campoMonto.setText("");
     }
+
+private void cargarBaseDatos() {
+        try (BufferedReader br = new BufferedReader(new FileReader("monedero.txt"))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(",", 6);
+                if (partes.length == 6) {
+                    Estudiante e = new Estudiante(partes[0], partes[1], partes[2], partes[3],
+                            Double.parseDouble(partes[4]), partes[5]);
+                    baseDatos.put(e.cedula, e);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println(" ");
+        }
+    }
+
+    private void guardarBaseDatos() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("monedero.txt"))) {
+            for (Estudiante e : baseDatos.values()) {
+                pw.println(e.toString());
+            }
+        } catch (IOException e) {
+            System.out.println("Error al guardar base de datos.");
+        }
+    }
+
+    class Estudiante {
+        String cedula, nombre, telefono, banco, historial;
+        double saldo;
+
+        Estudiante(String cedula, String nombre, String telefono, String banco, double saldo, String historial) {
+            this.cedula = cedula;
+            this.nombre = nombre;
+            this.telefono = telefono;
+            this.banco = banco;
+            this.saldo = saldo;
+            this.historial = historial;
+        }
+
+        @Override
+        public String toString() {
+            return String.join(",", cedula, nombre, telefono, banco, String.valueOf(saldo), historial);
+        }
+    }
+
+    // metedo para regresar a la ventana anterior
+   private void regresarUsuario() {
+    this.dispose(); // cierra la ventana actual
+    SwingUtilities.invokeLater(() -> {
+        Op_Usuario opUsuario = new Op_Usuario();
+        opUsuario.setVisible(true);
+    });
+ }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

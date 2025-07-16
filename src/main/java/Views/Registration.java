@@ -192,3 +192,6 @@ public class Registration extends JFrame {
         registrationPanel.add(registerButton);
     }
 }
+
+
+

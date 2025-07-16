@@ -41,4 +41,5 @@ public class AuthService {
         Map<String, String> datos = esAdmin ? ADMINISTRADORES.get(username) : USUARIOS.get(username);
         return datos != null ? datos.get("nombre") : "Invitado";
     }
-}
+} 
+
