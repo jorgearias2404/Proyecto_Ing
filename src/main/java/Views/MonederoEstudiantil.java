@@ -298,7 +298,7 @@ private void mostrarError(String mensaje) {
     }
 
 private void cargarBaseDatos() {
-        try (BufferedReader br = new BufferedReader(new FileReader("monedero.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("monedero"))) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] partes = linea.split(",", 6);
@@ -312,7 +312,7 @@ private void cargarBaseDatos() {
             System.out.println(" ");
         }
     }
-
+  
     private void guardarBaseDatos() {
         try (PrintWriter pw = new PrintWriter(new FileWriter("monedero.txt"))) {
             for (Estudiante e : baseDatos.values()) {
