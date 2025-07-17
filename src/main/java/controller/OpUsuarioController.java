@@ -3,7 +3,7 @@ package controller;
 import Views.Op_Usuario;
 import Views.MenuComedorUniversitario;
 import Views.MonederoEstudiantil;
-import javax.swing.SwingUtilities; 
+import javax.swing.SwingUtilities;
 
 public class OpUsuarioController {
     private Op_Usuario view;
@@ -12,7 +12,6 @@ public class OpUsuarioController {
     public OpUsuarioController(Op_Usuario view, String usuario) {
         this.view = view;
         this.usuarioActual = usuario;
-        
         configurarListeners();
     }
 
@@ -23,23 +22,23 @@ public class OpUsuarioController {
         view.addSalirListener(e -> salir());
     }
 
-    private void abrirMenuComedor() {
-        view.cerrarVentana();
-        SwingUtilities.invokeLater(() -> {
-            MenuComedorUniversitario menuView = new MenuComedorUniversitario();
-            MenuComedorController menuController = new MenuComedorController(menuView, usuarioActual);
-            menuView.setVisible(true);
-        });
-    }
+private void abrirMenuComedor() {
+    view.cerrarVentana();
+    SwingUtilities.invokeLater(() -> {
+        MenuComedorUniversitario menuView = new MenuComedorUniversitario(usuarioActual);
+        new MenuComedorController(menuView, usuarioActual);
+        menuView.setVisible(true);
+    });
+}
 
-    private void abrirMonedero() {
-        view.cerrarVentana();
-        SwingUtilities.invokeLater(() -> {
-            MonederoEstudiantil monederoView = new MonederoEstudiantil();
-            MonederoController monederoController = new MonederoController(monederoView, usuarioActual);
-            monederoView.setVisible(true);
-        });
-    }
+private void abrirMonedero() {
+    view.cerrarVentana();
+    SwingUtilities.invokeLater(() -> {
+        MonederoEstudiantil monederoView = new MonederoEstudiantil(usuarioActual);
+        new MonederoController(monederoView, usuarioActual);
+        monederoView.setVisible(true);
+    });
+}
 
     private void mostrarHistorial() {
         view.mostrarMensaje("Historial de: " + usuarioActual, "Historial");
@@ -47,6 +46,6 @@ public class OpUsuarioController {
 
     private void salir() {
         view.cerrarVentana();
-        // Aquí podrías agregar lógica para volver al login si es necesario
+        // Aquí podrías agregar lógica para volver al login
     }
 }

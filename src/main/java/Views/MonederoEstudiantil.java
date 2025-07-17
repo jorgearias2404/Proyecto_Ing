@@ -24,14 +24,14 @@ public class MonederoEstudiantil extends JFrame {
     private final Color COLOR_ETIQUETAS = new Color(180, 220, 240);
     private final Color COLOR_ERROR = new Color(231, 76, 60);
 
-    public MonederoEstudiantil() {
+    public MonederoEstudiantil(String usuario) {
+        setTitle("Monedero Estudiantil - " + usuario);
         configurarVentana();
         crearComponentes();
         configurarLayout();
     }
 
     private void configurarVentana() {
-        setTitle("Monedero Estudiantil");
         setSize(600, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -185,6 +185,9 @@ public class MonederoEstudiantil extends JFrame {
     
 public void setController(MonederoController controller) {
     this.recargarListener = e -> controller.procesarRecarga(e);  // Nombre correcto
-    this.regresarListener = e -> controller.regresarAUsuario(e); // Nombre correcto
+   this.regresarListener = e -> {
+        controller.regresarAUsuario(e);
+        this.cerrarVentana();
+    };
 }
 }

@@ -12,7 +12,8 @@ public class MenuComedorUniversitario extends JFrame {
     private JPanel panelPrincipal;
     private MenuComedorController controller;
 
-    public MenuComedorUniversitario() {
+    public MenuComedorUniversitario(String usuario) {
+        setTitle("Menú del Comedor - " + usuario);
         initComponents();
     }
 
@@ -153,10 +154,10 @@ public class MenuComedorUniversitario extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            MenuComedorUniversitario view = new MenuComedorUniversitario();
-            MenuComedorController controller = new MenuComedorController(view, "UsuarioDemo");
-            view.setController(controller);
-            view.setVisible(true);
-        });
+        MenuComedorUniversitario view = new MenuComedorUniversitario("UsuarioDemo");
+        MenuComedorController controller = new MenuComedorController(view, "UsuarioDemo");
+        view.setController(controller);
+        view.setVisible(true);
+    });
     }
 }
