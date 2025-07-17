@@ -141,6 +141,3 @@ public class Op_Usuario extends JFrame {
         });
     }
 } 
-
-
-

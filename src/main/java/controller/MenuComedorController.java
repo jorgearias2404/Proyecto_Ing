@@ -62,19 +62,38 @@ public class MenuComedorController {
     }
 
     public void agregarSeleccion(String seleccion) {
-        selecciones.add(seleccion);
+        System.out.println("Agregando selección: " + seleccion); 
+        if (!selecciones.contains(seleccion)) {
+            selecciones.add(seleccion);
+            System.out.println("Selecciones actuales: " + selecciones);
+        }
     }
 
-    public void removerSeleccion(String seleccion) {
+     public void removerSeleccion(String seleccion) {
+        System.out.println("Removiendo selección: " + seleccion); 
         selecciones.remove(seleccion);
+        System.out.println("Selecciones actuales: " + selecciones); 
     }
 
-    private void guardarSelecciones() {
+     private void guardarSelecciones() {
+        System.out.println("Intentando guardar. Total selecciones: " + selecciones.size()); 
+        
+        if (selecciones.isEmpty()) {
+            JOptionPane.showMessageDialog(view, 
+                "No hay selecciones para guardar.", 
+                "Advertencia", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
         try (FileWriter writer = new FileWriter("selecciones_menu.txt")) {
             for (String seleccion : selecciones) {
                 writer.write(seleccion + "\n");
             }
-            JOptionPane.showMessageDialog(view, "¡Selecciones guardadas!");
+            JOptionPane.showMessageDialog(view, 
+                "¡Se guardaron " + selecciones.size() + " selecciones!", 
+                "Éxito", 
+                JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(view, 
                 "Error al guardar: " + e.getMessage(), 
