@@ -139,13 +139,14 @@ public class MonederoController {
         }
     }
 
-    public void regresarAUsuario(java.awt.event.ActionEvent e) {
-        view.cerrarVentana();
-        SwingUtilities.invokeLater(() -> {
-            Op_Usuario opUsuario = new Op_Usuario(usuarioActual);
-            opUsuario.setVisible(true);
-        });
-    }
+   public void regresarAUsuario(java.awt.event.ActionEvent e) {
+    view.cerrarVentana();
+    SwingUtilities.invokeLater(() -> {
+        Op_Usuario opUsuario = new Op_Usuario(usuarioActual);
+        new OpUsuarioController(opUsuario, usuarioActual); // Conectamos el controlador
+        opUsuario.setVisible(true);
+    });
+}
 
     static class Estudiante {
         final String cedula;

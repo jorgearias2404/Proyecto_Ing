@@ -1,3 +1,4 @@
+
 package controller;
 
 import Services.AuthService;
@@ -55,6 +56,7 @@ public class LoginController {
         
         SwingUtilities.invokeLater(() -> {
             Op_Usuario opUsuario = new Op_Usuario(username);
+            new OpUsuarioController(opUsuario, username); // conectamos el controlador
             opUsuario.setVisible(true);
         });
     }
@@ -67,3 +69,5 @@ public class LoginController {
         });
     }
 }
+
+

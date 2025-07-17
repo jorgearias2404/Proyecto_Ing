@@ -84,15 +84,16 @@ public class MenuComedorController {
     }
 }
 
-    private void volverAOpUsuario() {
-        view.cerrarVentana();
-        SwingUtilities.invokeLater(() -> {
-            Op_Usuario opUsuario = new Op_Usuario(usuarioActual);
-            opUsuario.setVisible(true);
-        });
-    }
+ private void volverAOpUsuario() {
+    view.cerrarVentana();
+    SwingUtilities.invokeLater(() -> {
+        Op_Usuario opUsuario = new Op_Usuario(usuarioActual);
+        new OpUsuarioController(opUsuario, usuarioActual); // Conectamos el controlador
+        opUsuario.setVisible(true);
+    });
+}
 
-    // Métodos getter para colores (opcionales)
+    // Métodos getter para colores 
     public Color getColorFondo() { return COLOR_FONDO; }
     public Color getColorTexto() { return COLOR_TEXTO; }
     public Color getColorInput() { return COLOR_INPUT; }
