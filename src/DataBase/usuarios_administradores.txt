@@ -1,9 +1,4 @@
-[USUARIO]
-username = usuario1
-password = clave123
-nombre = Juan Pérez
-
-[ADMIN]
-username = admin1
-password = admin456
-nombre = Ana López
+user|test|123|Usuario Test
+user|juan|clave123|Juan Pérez
+admin|admin|456|Administrador Principal
+admin|maria|admin123|María González

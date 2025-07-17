@@ -1,3 +1,4 @@
+
 package controller;
 
 import Services.AuthService;
@@ -47,14 +48,15 @@ public class LoginController {
     }
     
     private void handleSuccessfulLogin(String username, boolean isAdmin) {
-       String nombre = authService.obtenerNombre(username, isAdmin);
+        String nombre = authService.obtenerNombre(username, isAdmin);
         String rol = isAdmin ? "Administrador" : "Usuario";
         
         loginView.showMessage("Bienvenido " + nombre + " (" + rol + ")", "Login exitoso");
         loginView.close();
         
         SwingUtilities.invokeLater(() -> {
-            Op_Usuario opUsuario = new Op_Usuario();
+            Op_Usuario opUsuario = new Op_Usuario(username);
+            new OpUsuarioController(opUsuario, username); // conectamos el controlador
             opUsuario.setVisible(true);
         });
     }
@@ -67,3 +69,5 @@ public class LoginController {
         });
     }
 }
+
+

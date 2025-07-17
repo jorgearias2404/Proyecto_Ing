@@ -3,7 +3,6 @@ package controller;
 import Views.MonederoEstudiantil;
 import Views.Op_Usuario;
 import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -16,35 +15,40 @@ public class MonederoController {
     private final DecimalFormat formato = new DecimalFormat("$#,##0.00");
     private final Map<String, Estudiante> baseDatos;
     private double saldo = 0.0;
+    private final String usuarioActual;
 
-    // Colores
-    private static final Color COLOR_EXITO = new Color(46, 204, 113);
-    private static final Color COLOR_ERROR = new Color(231, 76, 60);
-
-    public MonederoController(MonederoEstudiantil view) {
+    public MonederoController(MonederoEstudiantil view, String usuario) {
         this.view = view;
+        this.usuarioActual = usuario;
         this.baseDatos = new HashMap<>();
         cargarBaseDatos();
-        setupListeners();
+        configurarListeners();
+        cargarSaldoInicial();
     }
 
-    private void setupListeners() {
+    private void configurarListeners() {
         view.setRecargarListener(this::procesarRecarga);
         view.setRegresarListener(this::regresarAUsuario);
     }
 
-    private void procesarRecarga(java.awt.event.ActionEvent e) {
-        if (!validarCampos()) {
-            return;
+    private void cargarSaldoInicial() {
+        Estudiante estudiante = baseDatos.get(usuarioActual);
+        if (estudiante != null) {
+            saldo = estudiante.saldo;
+            view.actualizarSaldo(formato.format(saldo));
+            view.mostrarHistorial(estudiante.historial);
         }
+    }
 
-        String cedula = view.getCedula();
+    public void procesarRecarga(java.awt.event.ActionEvent e) {
+        if (!validarCampos()) return;
+
         String telefono = view.getTelefono();
         String banco = view.getBanco();
         double monto = view.getMonto();
 
-        Estudiante estudiante = baseDatos.computeIfAbsent(cedula, 
-            k -> new Estudiante(cedula, "Nombre no registrado", telefono, banco, 0.0, ""));
+        Estudiante estudiante = baseDatos.computeIfAbsent(usuarioActual, 
+            k -> new Estudiante(usuarioActual, "Estudiante", telefono, banco, 0.0, ""));
 
         estudiante.saldo += monto;
         saldo = estudiante.saldo;
@@ -56,31 +60,17 @@ public class MonederoController {
         );
         estudiante.historial += transaccion;
 
-        actualizarVista(transaccion);
-        guardarBaseDatos();
-    }
-
-    private void actualizarVista(String transaccion) {
         view.actualizarSaldo(formato.format(saldo));
         view.agregarTransaccion(transaccion);
         view.limpiarCampos();
-        view.mostrarMensaje("¡Recarga exitosa!", COLOR_EXITO);
+        
+        guardarBaseDatos();
     }
 
     private boolean validarCampos() {
-        if (!validarCedula()) return false;
         if (!validarTelefono()) return false;
         if (!validarBanco()) return false;
         return validarMonto();
-    }
-
-    private boolean validarCedula() {
-        String cedula = view.getCedula();
-        if (cedula == null || cedula.trim().isEmpty() || !cedula.matches("\\d{7,8}")) {
-            view.mostrarError("La cédula debe tener 7 u 8 dígitos");
-            return false;
-        }
-        return true;
     }
 
     private boolean validarTelefono() {
@@ -115,50 +105,48 @@ public class MonederoController {
     }
 
     private void cargarBaseDatos() {
-        File archivo = new File("monedero.txt");
-        if (!archivo.exists()) {
-            return;
-        }
-
-        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
-            br.lines().forEach(linea -> {
+        String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
+        new File("DataBase").mkdirs();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
                 String[] partes = linea.split(",", 6);
                 if (partes.length == 6) {
-                    try {
-                        Estudiante e = new Estudiante(
-                            partes[0], partes[1], partes[2], partes[3],
-                            Double.parseDouble(partes[4]), partes[5]
-                        );
-                        baseDatos.put(e.cedula, e);
-                    } catch (NumberFormatException e) {
-                        System.err.println("Error parseando línea: " + linea);
-                    }
+                    Estudiante e = new Estudiante(
+                        partes[0], partes[1], partes[2], partes[3],
+                        Double.parseDouble(partes[4]), partes[5]
+                    );
+                    baseDatos.put(e.cedula, e);
                 }
-            });
+            }
         } catch (IOException e) {
-            System.err.println("Error al cargar base de datos: " + e.getMessage());
+            System.err.println("Error al cargar datos: " + e.getMessage());
         }
     }
 
     private void guardarBaseDatos() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("monedero.txt"))) {
-            baseDatos.values().forEach(pw::println);
+        String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
+        
+        try (PrintWriter pw = new PrintWriter(new FileWriter(nombreArchivo))) {
+            Estudiante estudiante = baseDatos.get(usuarioActual);
+            if (estudiante != null) {
+                pw.println(estudiante);
+            }
         } catch (IOException e) {
-            System.err.println("Error al guardar base de datos: " + e.getMessage());
-            JOptionPane.showMessageDialog(view, 
-                "Error al guardar los datos", 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            System.err.println("Error al guardar datos: " + e.getMessage());
+            view.mostrarError("Error al guardar los datos");
         }
     }
 
-    private void regresarAUsuario(java.awt.event.ActionEvent e) {
-        view.cerrarVentana();
-        SwingUtilities.invokeLater(() -> {
-            Op_Usuario opUsuario = new Op_Usuario();
-            opUsuario.setVisible(true);
-        });
-    }
+   public void regresarAUsuario(java.awt.event.ActionEvent e) {
+    view.cerrarVentana();
+    SwingUtilities.invokeLater(() -> {
+        Op_Usuario opUsuario = new Op_Usuario(usuarioActual);
+        new OpUsuarioController(opUsuario, usuarioActual); // Conectamos el controlador
+        opUsuario.setVisible(true);
+    });
+}
 
     static class Estudiante {
         final String cedula;
@@ -181,7 +169,7 @@ public class MonederoController {
         @Override
         public String toString() {
             return String.join(",", cedula, nombre, telefono, banco, 
-                             String.valueOf(saldo), historial);
+                             String.valueOf(saldo), historial.replace("\n", "\\n"));
         }
     }
 }

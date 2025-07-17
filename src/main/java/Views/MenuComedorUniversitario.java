@@ -3,36 +3,41 @@ package Views;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import controller.MenuComedorController;
 
 public class MenuComedorUniversitario extends JFrame {
     private ActionListener guardarListener;
     private ActionListener atrasListener;
     private JPanel panelPrincipal;
-    
-    public MenuComedorUniversitario() {
+    private MenuComedorController controller;
+
+    public MenuComedorUniversitario(String usuario) {
+        setTitle("Menú del Comedor - " + usuario);
         initComponents();
+    }
+
+    public void setController(MenuComedorController controller) {
+        this.controller = controller;
     }
 
     private void initComponents() {
         setTitle("Menú del Comedor");
-        setSize(900, 700);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
-         Color colorFondo = new Color(7, 64, 91);
-        // Panel principal
+        Color colorFondo = controller != null ? controller.getColorFondo() : new Color(7, 64, 91);
         panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         panelPrincipal.setBackground(colorFondo);
 
-        // Titulo
         JLabel titulo = new JLabel("Menú Semanal del Comedor", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        titulo.setForeground(Color.WHITE);
         panelPrincipal.add(titulo);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        // Datos del menú (estos podrían moverse al controlador)
         String[] dias = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes"};
         String[][] desayunos = {
                 {"Café con leche", "Pan integral", "Fruta"},
@@ -49,133 +54,110 @@ public class MenuComedorUniversitario extends JFrame {
                 {"Pizza vegetariana", "Ensalada César", "Helado"}
         };
 
-        // Imágenes
-        String[] imagenesDesayuno = {
-                "images/desayuno.png",
-                "images/desayuno2.png",
-                "images/desayuno3.png",
-                "images/desayuno4.png",
-                "images/desayuno5.png"
-        };
-        String[] imagenesAlmuerzo = {
-                "images/almuerzo1.png",
-                "images/almuerzo2.png",
-                "images/almuerzo3.png",
-                "images/almuerzo4.png",
-                "images/almuerzo5.png"
-        };
-
-        // Panel días
         for (int i = 0; i < dias.length; i++) {
+            final int diaIndex = i;
             JPanel panelDia = new JPanel(new BorderLayout(10, 10));
             panelDia.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(Color.GRAY, 2),
                     BorderFactory.createEmptyBorder(10, 10, 10, 10)
             ));
+            panelDia.setBackground(new Color(151, 188, 199));
 
-            // Título del día
-            JLabel labelDia = new JLabel(dias[i], JLabel.CENTER);
+            JLabel labelDia = new JLabel(dias[diaIndex], JLabel.CENTER);
             labelDia.setFont(new Font("Arial", Font.BOLD, 16));
             panelDia.add(labelDia, BorderLayout.NORTH);
 
-            // Panel de comidas
             JPanel panelComidas = new JPanel(new GridLayout(1, 2, 15, 0));
 
             // Panel Desayuno
-            JPanel panelDesayuno = crearPanelComida(
-                    "Desayuno (7:00-10:00AM)", desayunos[i], imagenesDesayuno[i], dias[i] + " - Desayuno");
-            panelComidas.add(panelDesayuno);
+            JPanel panelDesayuno = new JPanel();
+            panelDesayuno.setLayout(new BoxLayout(panelDesayuno, BoxLayout.Y_AXIS));
+            panelDesayuno.setBackground(new Color(151, 188, 199));
+            panelDesayuno.setBorder(BorderFactory.createTitledBorder("Desayuno"));
+
+            for (String comida : desayunos[diaIndex]) {
+                JCheckBox cb = new JCheckBox(comida);
+                cb.setBackground(new Color(151, 188, 199));
+                cb.addItemListener(e -> {
+                    if (e.getStateChange() == ItemEvent.SELECTED) {
+                        controller.agregarSeleccion(dias[diaIndex] + " - Desayuno: " + comida);
+                    } else {
+                        controller.removerSeleccion(dias[diaIndex] + " - Desayuno: " + comida);
+                    }
+                });
+                panelDesayuno.add(cb);
+            }
 
             // Panel Almuerzo
-            JPanel panelAlmuerzo = crearPanelComida(
-                    "Almuerzo (12:00-2:00PM)", almuerzos[i], imagenesAlmuerzo[i], dias[i] + " - Almuerzo");
-            panelComidas.add(panelAlmuerzo);
+            JPanel panelAlmuerzo = new JPanel();
+            panelAlmuerzo.setLayout(new BoxLayout(panelAlmuerzo, BoxLayout.Y_AXIS));
+            panelAlmuerzo.setBackground(new Color(151, 188, 199));
+            panelAlmuerzo.setBorder(BorderFactory.createTitledBorder("Almuerzo"));
 
+            for (String comida : almuerzos[diaIndex]) {
+                JCheckBox cb = new JCheckBox(comida);
+                cb.setBackground(new Color(151, 188, 199));
+                cb.addItemListener(e -> {
+                    if (e.getStateChange() == ItemEvent.SELECTED) {
+                        controller.agregarSeleccion(dias[diaIndex] + " - Almuerzo: " + comida);
+                    } else {
+                        controller.removerSeleccion(dias[diaIndex] + " - Almuerzo: " + comida);
+                    }
+                });
+                panelAlmuerzo.add(cb);
+            }
+
+            panelComidas.add(panelDesayuno);
+            panelComidas.add(panelAlmuerzo);
             panelDia.add(panelComidas, BorderLayout.CENTER);
             panelPrincipal.add(panelDia);
-            panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+            panelPrincipal.add(Box.createRigidArea(new Dimension(0, 10)));
         }
 
-        // Botón Guardar
-        JButton botonGuardar = new JButton("Guardar Selecciones");
-        estiloBoton(botonGuardar);
-        botonGuardar.addActionListener(e -> {
-            if (guardarListener != null) guardarListener.actionPerformed(e);
+        JButton btnGuardar = new JButton("Guardar");
+        btnGuardar.addActionListener(e -> {
+            if (guardarListener != null) {
+                guardarListener.actionPerformed(e);
+            }
         });
-        panelPrincipal.add(botonGuardar);
-        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // Botón Atrás
-        JButton botonAtras = new JButton("Atrás");
-        estiloBoton(botonAtras);
-        botonAtras.addActionListener(e -> {
-            if (atrasListener != null) atrasListener.actionPerformed(e);
+        JButton btnAtras = new JButton("Atrás");
+        btnAtras.addActionListener(e -> {
+            if (atrasListener != null) {
+                atrasListener.actionPerformed(e);
+            }
         });
-        panelPrincipal.add(botonAtras);
+
+        JPanel panelBotones = new JPanel();
+        panelBotones.setBackground(colorFondo);
+        panelBotones.add(btnGuardar);
+        panelBotones.add(btnAtras);
+
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 20)));
+        panelPrincipal.add(panelBotones);
 
         add(new JScrollPane(panelPrincipal));
+        setLocationRelativeTo(null);
     }
 
-    private JPanel crearPanelComida(String tipo, String[] comidas, String rutaImagen, String diaComida) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-        // Título
-        JLabel labelTipo = new JLabel(tipo, JLabel.CENTER);
-        labelTipo.setFont(new Font("Arial", Font.BOLD, 14));
-        panel.add(labelTipo);
-
-        // Imagen
-        try {
-            ImageIcon icono = new ImageIcon(rutaImagen);
-            JLabel imagen = new JLabel(new ImageIcon(icono.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH)));
-            imagen.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(imagen);
-        } catch (Exception e) {
-            JLabel error = new JLabel("[Imagen no disponible]");
-            error.setForeground(Color.RED);
-            panel.add(error);
-        }
-
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
-
-        // Opciones de comida
-        for (String comida : comidas) {
-            JCheckBox checkBox = new JCheckBox(comida);
-            checkBox.setFont(new Font("Arial", Font.PLAIN, 12));
-            panel.add(checkBox);
-        }
-
-        return panel;
-    }
-
-    // Métodos para el controlador
     public void setGuardarListener(ActionListener listener) {
         this.guardarListener = listener;
     }
-    
+
     public void setAtrasListener(ActionListener listener) {
         this.atrasListener = listener;
     }
-    
+
     public void cerrarVentana() {
-        dispose();
-    }
-    
-    private void estiloBoton(JButton boton) {
-        boton.setBackground(new Color(151, 188, 199));
-        boton.setForeground(Color.WHITE);
-        boton.setFocusPainted(false);
-        boton.setFont(new Font("Arial", Font.BOLD, 14));
-        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        this.dispose();
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            MenuComedorUniversitario view = new MenuComedorUniversitario();
-            new controller.MenuComedorController(view);
-            view.setVisible(true);
-        });
+        MenuComedorUniversitario view = new MenuComedorUniversitario("UsuarioDemo");
+        MenuComedorController controller = new MenuComedorController(view, "UsuarioDemo");
+        view.setController(controller);
+        view.setVisible(true);
+    });
     }
 }

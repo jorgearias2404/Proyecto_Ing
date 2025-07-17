@@ -1,4 +1,0 @@
-28171645,Nombre no registrado,04147576464,Banesco,10.0,[16/07/25 16:22] Recarga: $10.00 - Banco: Banesco
-
-30142467,Nombre no registrado,04241712365,Mercantil,20.0,[16/07/25 16:21] Recarga: $20.00 - Banco: Mercantil
-
