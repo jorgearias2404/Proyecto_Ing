@@ -47,7 +47,7 @@ public class LoginController {
     }
     
     private void handleSuccessfulLogin(String username, boolean isAdmin) {
-        String nombre = authService.obtenerNombre(username, isAdmin);
+       String nombre = authService.obtenerNombre(username, isAdmin);
         String rol = isAdmin ? "Administrador" : "Usuario";
         
         loginView.showMessage("Bienvenido " + nombre + " (" + rol + ")", "Login exitoso");

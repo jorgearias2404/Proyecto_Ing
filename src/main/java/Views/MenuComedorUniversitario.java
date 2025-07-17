@@ -19,10 +19,13 @@ public class MenuComedorUniversitario extends JFrame {
         setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+
+         Color colorFondo = new Color(7, 64, 91);
         // Panel principal
         panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        panelPrincipal.setBackground(colorFondo);
 
         // Titulo
         JLabel titulo = new JLabel("Menú Semanal del Comedor", JLabel.CENTER);

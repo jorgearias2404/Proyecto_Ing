@@ -2,39 +2,32 @@ package Views;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.*;
-import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.awt.event.ActionListener;
 
 public class MonederoEstudiantil extends JFrame {
-
-    // colores de la aplicacion
-     Color COLOR_FONDO = new Color(7, 64, 91);
-     Color COLOR_TEXTO = new Color(240, 240, 240);
-     Color COLOR_BOTON = new Color(151, 188, 199);
-     Color COLOR_EXITO = new Color(46, 204, 113);
-     Color COLOR_ERROR = new Color(231, 76, 60);
-     Color COLOR_PANEL = new Color(44, 62, 80);
-     Color COLOR_CAMPOS = new Color(200, 220, 230);
-     Color COLOR_ETIQUETAS = new Color(180, 220, 240);
-
-    // componentes
-    private JTextField campoCedula,campoTelefono, campoMonto;
+    // Componentes UI
+    private JTextField campoCedula, campoTelefono, campoMonto;
     private JComboBox<String> comboBanco;
     private JLabel labelSaldo, labelMensaje;
     private JTextArea areaHistorial;
-    private double saldo = 0.0;
-    private DecimalFormat formato = new DecimalFormat("$#,##0.00");
-    private Map<String, Estudiante> baseDatos = new HashMap<>();
- 
+    
+    // Listeners
+    private ActionListener recargarListener;
+    private ActionListener regresarListener;
+    
+    // Colores
+    private final Color COLOR_FONDO = new Color(7, 64, 91);
+    private final Color COLOR_TEXTO = new Color(240, 240, 240);
+    private final Color COLOR_BOTON = new Color(151, 188, 199);
+    private final Color COLOR_PANEL = new Color(44, 62, 80);
+    private final Color COLOR_CAMPOS = new Color(200, 220, 230);
+    private final Color COLOR_ETIQUETAS = new Color(180, 220, 240);
+    private final Color COLOR_ERROR = new Color(231, 76, 60);
+
     public MonederoEstudiantil() {
         configurarVentana();
         crearComponentes();
         configurarLayout();
-        cargarBaseDatos();
     }
 
     private void configurarVentana() {
@@ -46,24 +39,18 @@ public class MonederoEstudiantil extends JFrame {
     }
 
     private void crearComponentes() {
-        // campos de textos
+        // Campos de texto
         campoCedula = crearCampoTexto("Ej: 28345678");
         campoTelefono = crearCampoTexto("Ej: 04121234567");
         campoMonto = crearCampoTexto("Ej: 100.00");
 
-        // selector de banco
+        // Selector de banco
         String[] bancos = {"Seleccionar banco", "Banco de Venezuela", "Banesco", "Mercantil", "BBVA Provincial"};
         comboBanco = new JComboBox<>(bancos);
-        comboBanco.setBackground(COLOR_CAMPOS);
-        comboBanco.setForeground(Color.BLACK);
-        comboBanco.setFont(new Font("Arial", Font.PLAIN, 12));
-        comboBanco.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(COLOR_BOTON, 1),
-            BorderFactory.createEmptyBorder(5, 8, 5, 8)
-        ));
+        estiloCombo(comboBanco);
 
-        // etiquetas
-        labelSaldo = new JLabel("Saldo: " + formato.format(saldo));
+        // Etiquetas
+        labelSaldo = new JLabel("Saldo: $0.00");
         labelSaldo.setFont(new Font("Arial", Font.BOLD, 16));
         labelSaldo.setForeground(COLOR_TEXTO);
 
@@ -71,7 +58,7 @@ public class MonederoEstudiantil extends JFrame {
         labelMensaje.setFont(new Font("Arial", Font.ITALIC, 12));
         labelMensaje.setForeground(COLOR_TEXTO);
 
-        // area de historial
+        // Área de historial
         areaHistorial = new JTextArea(8, 20);
         areaHistorial.setBackground(COLOR_PANEL);
         areaHistorial.setForeground(COLOR_TEXTO);
@@ -93,10 +80,20 @@ public class MonederoEstudiantil extends JFrame {
         return campo;
     }
 
+    private void estiloCombo(JComboBox<String> combo) {
+        combo.setBackground(COLOR_CAMPOS);
+        combo.setForeground(Color.BLACK);
+        combo.setFont(new Font("Arial", Font.PLAIN, 12));
+        combo.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(COLOR_BOTON, 1),
+            BorderFactory.createEmptyBorder(5, 8, 5, 8)
+        ));
+    }
+
     private void configurarLayout() {
         setLayout(new BorderLayout(10, 10));
 
-        // panel superior título y saldo
+        // Panel superior (título y saldo)
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panelSuperior.setBackground(COLOR_FONDO);
         
@@ -106,7 +103,7 @@ public class MonederoEstudiantil extends JFrame {
         panelSuperior.add(titulo);
         panelSuperior.add(labelSaldo);
 
-        // panel central formulario
+        // Panel central (formulario)
         JPanel panelCentral = new JPanel(new GridBagLayout());
         panelCentral.setBackground(COLOR_PANEL);
         panelCentral.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -115,50 +112,32 @@ public class MonederoEstudiantil extends JFrame {
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.anchor = GridBagConstraints.WEST;
 
-        // etiquetas y campos
-        Font fontEtiquetas = new Font("Arial", Font.BOLD, 12);
+        // Añadir componentes al panel central
+        agregarComponente(panelCentral, gbc, 0, 0, "Cédula:", campoCedula);
+        agregarComponente(panelCentral, gbc, 0, 1, "Banco:", comboBanco);
+        agregarComponente(panelCentral, gbc, 0, 2, "Teléfono:", campoTelefono);
+        agregarComponente(panelCentral, gbc, 0, 3, "Monto (Bs):", campoMonto);
 
-        gbc.gridx = 0; gbc.gridy = 0;
-        panelCentral.add(crearEtiqueta("Cédula:", fontEtiquetas, COLOR_ETIQUETAS), gbc);
-        gbc.gridx = 1;
-        panelCentral.add(campoCedula, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 1;
-        panelCentral.add(crearEtiqueta("Banco:", fontEtiquetas, COLOR_ETIQUETAS), gbc);
-        gbc.gridx = 1;
-        panelCentral.add(comboBanco, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 2;
-        panelCentral.add(crearEtiqueta("Teléfono:", fontEtiquetas, COLOR_ETIQUETAS), gbc);
-        gbc.gridx = 1;
-        panelCentral.add(campoTelefono, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 3;
-        panelCentral.add(crearEtiqueta("Monto (Bs):", fontEtiquetas, COLOR_ETIQUETAS), gbc);
-        gbc.gridx = 1;
-        panelCentral.add(campoMonto, gbc);
-
-        // boton de recarga
+        // Botón Recargar
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         JButton botonRecargar = new JButton("Recargar Saldo");
-        botonRecargar.setBackground(COLOR_BOTON);
-        botonRecargar.setForeground(COLOR_FONDO);
-        botonRecargar.setFont(new Font("Arial", Font.BOLD, 12));
-        botonRecargar.addActionListener(e -> procesarRecarga());
+        estiloBoton(botonRecargar);
+        botonRecargar.addActionListener(e -> {
+            if (recargarListener != null) recargarListener.actionPerformed(e);
+        });
         panelCentral.add(botonRecargar, gbc);
           
-        // boton de regresar
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        // Botón Regresar
+        gbc.gridy = 5;
         JButton botonRegresar = new JButton("Regresar");
-        botonRegresar.setBackground(COLOR_BOTON);
-        botonRegresar.setForeground(COLOR_FONDO);
-        botonRegresar.setFont(new Font("Arial", Font.BOLD, 12));
-        botonRegresar.addActionListener(e -> regresarUsuario());
+        estiloBoton(botonRegresar);
+        botonRegresar.addActionListener(e -> {
+            if (regresarListener != null) regresarListener.actionPerformed(e);
+        });
         panelCentral.add(botonRegresar, gbc);
 
-        // panel del historial
+        // Panel del historial
         JScrollPane scrollHistorial = new JScrollPane(areaHistorial);
         scrollHistorial.setBorder(BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(COLOR_BOTON, 1), 
@@ -169,188 +148,96 @@ public class MonederoEstudiantil extends JFrame {
             COLOR_TEXTO
         ));
 
-        // organizacion final
+        // Organización final
         add(panelSuperior, BorderLayout.NORTH);
         add(panelCentral, BorderLayout.WEST);
         add(scrollHistorial, BorderLayout.CENTER);
         add(labelMensaje, BorderLayout.SOUTH);
     }
 
-    private JLabel crearEtiqueta(String texto, Font font, Color color) {
+    private void agregarComponente(JPanel panel, GridBagConstraints gbc, int x, int y, String texto, JComponent componente) {
+        gbc.gridx = 0; gbc.gridy = y;
+        panel.add(crearEtiqueta(texto), gbc);
+        gbc.gridx = 1;
+        panel.add(componente, gbc);
+    }
+
+    private JLabel crearEtiqueta(String texto) {
         JLabel etiqueta = new JLabel(texto);
-        etiqueta.setFont(font);
-        etiqueta.setForeground(color);
+        etiqueta.setFont(new Font("Arial", Font.BOLD, 12));
+        etiqueta.setForeground(COLOR_ETIQUETAS);
         return etiqueta;
     }
 
-    private void procesarRecarga() {
-    if (!validarCampos()) return;
-
-    String cedula = campoCedula.getText().trim();
-    String telefono = campoTelefono.getText().trim();
-    String banco = (String) comboBanco.getSelectedItem();
-    double monto = Double.parseDouble(campoMonto.getText().trim());
-
-    // verificar si el estudiante ya existe o crear uno nuevo
-    Estudiante estudiante = baseDatos.get(cedula);
-    if (estudiante == null) {
-        estudiante = new Estudiante(cedula, "Nombre no registrado", telefono, banco, 0.0, "");
-        baseDatos.put(cedula, estudiante);
+    private void estiloBoton(JButton boton) {
+        boton.setBackground(COLOR_BOTON);
+        boton.setForeground(COLOR_FONDO);
+        boton.setFont(new Font("Arial", Font.BOLD, 12));
+        boton.setFocusPainted(false);
     }
 
-    // actualizar saldo
-    estudiante.saldo += monto;
-    saldo = estudiante.saldo; // actualiza el saldo mostrado
+    // Métodos para el controlador
+    public void setRecargarListener(ActionListener listener) {
+        this.recargarListener = listener;
+    }
     
-    // registrar en historial
-    String transaccion = String.format("[%s] Recarga: %s - Banco: %s\n",
-        LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")),
-        formato.format(monto),
-        banco
-    );
-    estudiante.historial += transaccion;
-    areaHistorial.append(transaccion);
-
-    // actualizar interfaz
-    labelSaldo.setText("Saldo: " + formato.format(saldo));
-    limpiarCampos();
-    labelMensaje.setText("¡Recarga exitosa!");
-    labelMensaje.setForeground(COLOR_EXITO);
+    public void setRegresarListener(ActionListener listener) {
+        this.regresarListener = listener;
+    }
     
-    guardarBaseDatos();
-}
-
-     private boolean validarCampos() {
-
-    // validar cedula 
-    String cedula = campoCedula.getText().trim();
-    if (cedula.isEmpty()) {
-        mostrarError("Ingrese la cédula");
-        campoCedula.requestFocus();
-        return false;
+    public String getCedula() {
+        return campoCedula.getText().trim();
     }
-    if (!cedula.matches("\\d+")) {
-        mostrarError("La cédula solo puede contener números");
-        campoCedula.requestFocus();
-        return false;
+    
+    public String getTelefono() {
+        return campoTelefono.getText().trim();
     }
-    if (cedula.length() < 7 || cedula.length() > 8) {
-        mostrarError("La cédula debe tener 7 u 8 dígitos");
-        campoCedula.requestFocus();
-        return false;
+    
+    public String getBanco() {
+        return (String) comboBanco.getSelectedItem();
     }
-
-    // validar telefono 
-    String telefono = campoTelefono.getText().trim();
-    if (telefono.isEmpty()) {
-        mostrarError("Ingrese el teléfono");
-        campoTelefono.requestFocus();
-        return false;
-    }
-    if (!telefono.matches("\\d+")) {
-        mostrarError("El teléfono solo puede contener números");
-        campoTelefono.requestFocus();
-        return false;
-    }
-    if (telefono.length() != 11) {
-        mostrarError("El teléfono debe tener 11 dígitos (ej: 04121234567)");
-        campoTelefono.requestFocus();
-        return false;
-    }
-
-    // validar banco 
-    if (comboBanco.getSelectedIndex() == 0) {
-        mostrarError("Seleccione un banco");
-        comboBanco.requestFocus();
-        return false;
-    }
-
-    // validar monto 
-    try {
-        double monto = Double.parseDouble(campoMonto.getText().trim());
-        if (monto <= 0) {
-            mostrarError("El monto debe ser mayor a cero");
-            campoMonto.requestFocus();
-            return false;
+    
+    public double getMonto() {
+        try {
+            return Double.parseDouble(campoMonto.getText().trim());
+        } catch (NumberFormatException e) {
+            return -1;
         }
-    } catch (NumberFormatException e) {
-        mostrarError("Ingrese un monto válido (ej: 100.50)");
-        campoMonto.requestFocus();
-        return false;
     }
-
-    return true;
-}
-
-private void mostrarError(String mensaje) {
-    labelMensaje.setText("Error: " + mensaje);
-    labelMensaje.setForeground(COLOR_ERROR);
-}
-    private void limpiarCampos() {
+    
+    public void actualizarSaldo(String saldoFormateado) {
+        labelSaldo.setText("Saldo: " + saldoFormateado);
+    }
+    
+    public void agregarTransaccion(String transaccion) {
+        areaHistorial.append(transaccion);
+    }
+    
+    public void limpiarCampos() {
         campoCedula.setText("");
         comboBanco.setSelectedIndex(0);
         campoTelefono.setText("");
         campoMonto.setText("");
     }
-
-private void cargarBaseDatos() {
-        try (BufferedReader br = new BufferedReader(new FileReader("monedero"))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] partes = linea.split(",", 6);
-                if (partes.length == 6) {
-                    Estudiante e = new Estudiante(partes[0], partes[1], partes[2], partes[3],
-                            Double.parseDouble(partes[4]), partes[5]);
-                    baseDatos.put(e.cedula, e);
-                }
-            }
-        } catch (IOException e) {
-            System.out.println(" ");
-        }
+    
+    public void mostrarMensaje(String mensaje, Color color) {
+        labelMensaje.setText(mensaje);
+        labelMensaje.setForeground(color);
     }
-  
-    private void guardarBaseDatos() {
-        try (PrintWriter pw = new PrintWriter(new FileWriter("monedero.txt"))) {
-            for (Estudiante e : baseDatos.values()) {
-                pw.println(e.toString());
-            }
-        } catch (IOException e) {
-            System.out.println("Error al guardar base de datos.");
-        }
+    
+    public void mostrarError(String mensaje) {
+        mostrarMensaje("Error: " + mensaje, COLOR_ERROR);
     }
-
-    class Estudiante {
-        String cedula, nombre, telefono, banco, historial;
-        double saldo;
-
-        Estudiante(String cedula, String nombre, String telefono, String banco, double saldo, String historial) {
-            this.cedula = cedula;
-            this.nombre = nombre;
-            this.telefono = telefono;
-            this.banco = banco;
-            this.saldo = saldo;
-            this.historial = historial;
-        }
-
-        @Override
-        public String toString() {
-            return String.join(",", cedula, nombre, telefono, banco, String.valueOf(saldo), historial);
-        }
+    
+    public void cerrarVentana() {
+        dispose();
     }
-
-    // metedo para regresar a la ventana anterior
-   private void regresarUsuario() {
-    this.dispose(); // cierra la ventana actual
-    SwingUtilities.invokeLater(() -> {
-        Op_Usuario opUsuario = new Op_Usuario();
-        opUsuario.setVisible(true);
-    });
- }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            MonederoEstudiantil app = new MonederoEstudiantil();
-            app.setVisible(true);
+            MonederoEstudiantil view = new MonederoEstudiantil();
+            new controller.MonederoController(view);
+            view.setVisible(true);
         });
     }
 }
