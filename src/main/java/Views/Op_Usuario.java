@@ -2,38 +2,33 @@ package Views;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import controller.MenuComedorController;
-import controller.MonederoController;
-import Views.MenuComedorUniversitario;
-import Views.MonederoEstudiantil;
 
 public class Op_Usuario extends JFrame {
-    private String usuarioActual;
+    private JButton botonReserva;
+    private JButton botonHistorial;
+    private JButton botonRecargar;
+    private JButton botonSalir;
     
     public Op_Usuario(String usuario) {
-        this.usuarioActual = usuario;
-        initComponents();
+        initComponents(usuario);
     }
 
-    private void initComponents() {
-        setTitle("Opciones Usuario - " + usuarioActual);
+    private void initComponents(String usuario) {
+        setTitle("Opciones Usuario - " + usuario);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 500);
         setResizable(false);
 
         Color colorFondo = new Color(7, 64, 91);
         Color colorTexto = new Color(240, 240, 240);
-        Color colorBoton = new Color(151, 188, 199);
-        Color colorBotonTexto = new Color(0, 0, 0);
 
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         panelPrincipal.setBackground(colorFondo);
 
-        JLabel nombreUsuario = new JLabel(usuarioActual);
+        JLabel nombreUsuario = new JLabel(usuario);
         nombreUsuario.setFont(new Font("Arial", Font.BOLD, 16));
         nombreUsuario.setForeground(colorTexto);
         nombreUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -47,60 +42,57 @@ public class Op_Usuario extends JFrame {
         panelPrincipal.add(titulo);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        JButton botonReserva = crearBoton("REALIZAR RESERVA", e -> abrirMenuComedor());
+        botonReserva = crearBoton("REALIZAR RESERVA");
         panelPrincipal.add(botonReserva);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        JButton botonHistorial = crearBoton("VER HISTORIAL", e -> abrirHistorial());
+        botonHistorial = crearBoton("VER HISTORIAL");
         panelPrincipal.add(botonHistorial);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        JButton botonRecargar = crearBoton("RECARGAR MONEDERO", e -> abrirMonedero());
+        botonRecargar = crearBoton("RECARGAR MONEDERO");
         panelPrincipal.add(botonRecargar);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        JButton botonSalir = crearBoton("CERRAR SESIÓN", e -> dispose());
+        botonSalir = crearBoton("CERRAR SESIÓN");
         panelPrincipal.add(botonSalir);
 
         add(panelPrincipal);
         setLocationRelativeTo(null);
     }
 
-    private JButton crearBoton(String texto, ActionListener listener) {
+    private JButton crearBoton(String texto) {
         JButton boton = new JButton(texto);
         boton.setMaximumSize(new Dimension(300, 50));
         boton.setBackground(new Color(151, 188, 199));
         boton.setForeground(Color.BLACK);
         boton.setFont(new Font("Arial", Font.BOLD, 14));
         boton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        boton.addActionListener(listener);
         return boton;
     }
 
-    private void abrirMenuComedor() {
-        this.dispose();
-        SwingUtilities.invokeLater(() -> {
-            MenuComedorUniversitario view = new MenuComedorUniversitario();
-            MenuComedorController controller = new MenuComedorController(view, usuarioActual);
-            view.setController(controller);
-            view.setVisible(true);
-        });
+    // Métodos para el controlador
+    public void addReservaListener(ActionListener listener) {
+        botonReserva.addActionListener(listener);
     }
-   private void abrirMonedero() {
-    this.dispose();
-    SwingUtilities.invokeLater(() -> {
-        MonederoEstudiantil view = new MonederoEstudiantil();
-        MonederoController controller = new MonederoController(view, usuarioActual);
-        view.setController(controller); // Ahora este método existe
-        view.setVisible(true);
-    });
-}
-   
 
-    private void abrirHistorial() {
-        JOptionPane.showMessageDialog(this, 
-            "Historial de: " + usuarioActual, 
-            "Historial", 
-            JOptionPane.INFORMATION_MESSAGE);
+    public void addHistorialListener(ActionListener listener) {
+        botonHistorial.addActionListener(listener);
+    }
+
+    public void addRecargarListener(ActionListener listener) {
+        botonRecargar.addActionListener(listener);
+    }
+
+    public void addSalirListener(ActionListener listener) {
+        botonSalir.addActionListener(listener);
+    }
+
+    public void mostrarMensaje(String mensaje, String titulo) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void cerrarVentana() {
+        this.dispose();
     }
 }
