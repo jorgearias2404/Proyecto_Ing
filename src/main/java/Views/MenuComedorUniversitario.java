@@ -1,5 +1,4 @@
-
- package Views;
+package Views;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +25,7 @@ public class MenuComedorUniversitario extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Color colorFondo = new Color(7, 64, 91);
+        Color colorFondo = controller != null ? controller.getColorFondo() : new Color(7, 64, 91);
         panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
@@ -155,8 +154,8 @@ public class MenuComedorUniversitario extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             MenuComedorUniversitario view = new MenuComedorUniversitario();
-            MenuComedorController controller = new MenuComedorController(view);
-            view.setController(controller); 
+            MenuComedorController controller = new MenuComedorController(view, "UsuarioDemo");
+            view.setController(controller);
             view.setVisible(true);
         });
     }
