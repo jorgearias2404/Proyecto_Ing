@@ -39,7 +39,7 @@ public class RegistrationController {
             String userType = (role.equals("Administrador")) ? "admin" : "user";
 
             // Crear la línea en el formato correcto
-            String userLine = String.format("%s|%s|%s|%s (%s)\n", 
+            String userLine = String.format("%s|%s|%s|%s (%s)", 
                 userType, username, password, username, id);
 
             try {
