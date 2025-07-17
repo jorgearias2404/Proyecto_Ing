@@ -14,6 +14,7 @@ public class MenuComedorUniversitario extends JFrame {
     }
 
     private void initComponents() {
+   
         setTitle("Menú del Comedor");
         setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

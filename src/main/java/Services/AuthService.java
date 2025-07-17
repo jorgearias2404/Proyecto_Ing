@@ -3,7 +3,7 @@ package Services;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuthService {
+  public class AuthService {
     // Credenciales hardcodeadas con estructura correcta
     private static final Map<String, Map<String, String>> USUARIOS = new HashMap<>();
     private static final Map<String, Map<String, String>> ADMINISTRADORES = new HashMap<>();
@@ -42,4 +42,5 @@ public class AuthService {
         return datos != null ? datos.get("nombre") : "Invitado";
     }
 } 
+
 

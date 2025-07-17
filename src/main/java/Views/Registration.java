@@ -2,6 +2,8 @@ package Views;
 
 import javax.swing.*;
 
+import Services.AuthService;
+
 //import java.awt.event.*;
 import java.awt.*;
 
@@ -191,7 +193,5 @@ public class Registration extends JFrame {
         registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         registrationPanel.add(registerButton);
     }
+
 }
-
-
-
