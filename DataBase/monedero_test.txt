@@ -1,1 +1,0 @@
-test,Estudiante,04241715658,Banco Nacional,10.0,[17/07/25 19:29] Recarga: $10.00 - Banco: Banco Nacional\n

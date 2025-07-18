@@ -77,8 +77,8 @@ public class Op_Usuario extends JFrame {
     }
 
     // Metodo que se modificado en Op_Usuario
-public void addHistorialListener(ActionListener listener) {
-    botonHistorial.addActionListener(e -> {
+     public void addHistorialListener(ActionListener listener) {
+         botonHistorial.addActionListener(e -> {
         this.setVisible(false); // Oculta la ventana actual
         CalculadoraCCB calculadora = new CalculadoraCCB(this); // Crea una nueva instancia de CalculadoraCCB
         calculadora.setVisible(true);

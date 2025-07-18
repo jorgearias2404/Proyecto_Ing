@@ -126,8 +126,8 @@ public class CalculadoraCCB extends JFrame {
     }
   public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> {
-        Op_Usuario opUsuario = new Op_Usuario("NombreUsuario"); // Necesitas crear Op_Usuario primero
-        CalculadoraCCB ventana = new CalculadoraCCB(opUsuario); // Pasar la referencia
+        Op_Usuario opUsuario = new Op_Usuario("NombreUsuario"); 
+        CalculadoraCCB ventana = new CalculadoraCCB(opUsuario); // Pasa la referencia de Op_Usuario
         ventana.setVisible(true);
     });
   }
