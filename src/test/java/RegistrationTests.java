@@ -1,13 +1,19 @@
 import org.junit.Assert;
 import org.junit.Test;
 
+import Services.AuthService;
 import controller.ValidarFormularioRegistro;
 
 public class RegistrationTests {
     
     @Test
     public void testForm() {
+
+        //inicializacion
         controller.ValidarFormularioRegistro val = new ValidarFormularioRegistro();
+
+        //assert
+
         //caso base valido, para las demas pruebas se utilizaran casos que sabemos que son validos para rellenar los demas campos
         Assert.assertEquals(true, val.validateForm("sergioferg.2003@gmail.com", "usuarOo123", "sergiogo", "30142272", "Estudiante"));
 
@@ -42,5 +48,9 @@ public class RegistrationTests {
         Assert.assertEquals(false, val.validateForm("sergioferg.2003@gmail.com", "contra123", "123456", "30142272", "Rol"));
 
         Assert.assertEquals("Debe seleccionar un rol", val.errorMessage);
+    }
+
+    public void testLogin() {
+        Assert.assertEquals(false, AuthService.validarLogin("", "", true));
     }
 }
