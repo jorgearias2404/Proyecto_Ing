@@ -9,8 +9,10 @@ public class CalculadoraCCB extends JFrame {
 
     private JTextField txtCostosFijos, txtCostosVariables, txtBandejas, txtMerma;
     private JLabel lblResultado;
+    private Op_Usuario opUsuario; // Referencia a la ventana de opciones de usuario
 
-    public CalculadoraCCB() {
+    public CalculadoraCCB(Op_Usuario opUsuario) {
+        this.opUsuario = opUsuario;
         initComponents();
     }
 
@@ -18,7 +20,7 @@ public class CalculadoraCCB extends JFrame {
         // Configuración de la ventana
         setTitle("Calculadora CCB");
         setSize(400, 300);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
         Color COLOR_FONDO = new Color(7, 64, 91);
         Color COLOR_TEXTO = new Color(240, 240, 240);
@@ -75,11 +77,24 @@ public class CalculadoraCCB extends JFrame {
         btnCalcular.setBackground(COLOR_BOTON);
         btnCalcular.setForeground(COLOR_FONDO);
 
+        // Boton regresar para volver a Op_Usuario
+        JButton btnRegresar = new JButton("Regresar");
+        btnRegresar.setBounds(120, 230, 150, 30);
+        add(btnRegresar);
+        btnRegresar.setBackground(COLOR_BOTON);
+        btnRegresar.setForeground(COLOR_FONDO);
+
         // Etiqueta para mostrar el resultado
         lblResultado = new JLabel("CCB: ");
         lblResultado.setBounds(30, 230, 300, 30);
         add(lblResultado);
         lblResultado.setForeground(COLOR_TEXTO);
+
+        // Evento del boton regresar
+        btnRegresar.addActionListener(e -> {
+            this.dispose(); 
+            opUsuario.setVisible(true); 
+        });
 
         // Evento del botón
         btnCalcular.addActionListener(new ActionListener() {
@@ -109,11 +124,11 @@ public class CalculadoraCCB extends JFrame {
             JOptionPane.showMessageDialog(this, "¡Error! Ingresa valores numéricos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            CalculadoraCCB ventana = new CalculadoraCCB();
-            ventana.setVisible(true);
-        });
-    }
+  public static void main(String[] args) {
+    SwingUtilities.invokeLater(() -> {
+        Op_Usuario opUsuario = new Op_Usuario("NombreUsuario"); 
+        CalculadoraCCB ventana = new CalculadoraCCB(opUsuario); // Pasa la referencia de Op_Usuario
+        ventana.setVisible(true);
+    });
+  }
 }
