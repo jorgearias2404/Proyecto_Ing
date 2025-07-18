@@ -4,131 +4,137 @@ import Views.Registration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class RegistrationController {
-    private Registration view;
-    private static final String USERS_FILE = "src/Database/usuarios_administradores.txt"; // Nombre del archivo de usuarios
+    private final Registration view;
+    private static final String USERS_FILE = getAbsoluteDatabasePath();
 
     public RegistrationController(Registration view) {
         this.view = view;
-        
-        // Configurar el listener para el botón de registro
         view.setRegisterListener(new RegisterListener());
+        System.out.println("RUTA DEFINITIVA DEL ARCHIVO: " + USERS_FILE);
+    }
+
+    private static String getAbsoluteDatabasePath() {
+        // 1. Primero intentamos encontrar la ruta base del proyecto
+        String projectPath = System.getProperty("user.dir");
+        System.out.println("Directorio actual: " + projectPath);
+
+        // 2. Posibles ubicaciones del archivo
+        String[] possiblePaths = {
+            projectPath + "/Database/selecciones/usuarios_administradores.txt",
+            projectPath + "/src/Database/selecciones/usuarios_administradores.txt",
+            projectPath + "/target/classes/Database/selecciones/usuarios_administradores.txt"
+        };
+
+        // 3. Buscar el archivo en las ubicaciones posibles
+        for (String path : possiblePaths) {
+            if (Files.exists(Paths.get(path))) {
+                System.out.println("Archivo encontrado en: " + path);
+                return path;
+            }
+            System.out.println("No encontrado en: " + path);
+        }
+
+        // 4. Si no se encuentra, crear la estructura de directorios
+        String defaultPath = projectPath + "/Database/selecciones/usuarios_administradores.txt";
+        try {
+            Files.createDirectories(Paths.get(defaultPath).getParent());
+            System.out.println("Estructura de directorios creada en: " + defaultPath);
+            return defaultPath;
+        } catch (IOException e) {
+            System.err.println("Error al crear directorios: " + e.getMessage());
+            return defaultPath; // Retornamos la ruta igualmente
+        }
     }
 
     class RegisterListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // Validar los datos del formulario
-            if (!validateForm()) {
-                return;
-            }
-
-            // Obtener los datos del formulario
-            String email = view.getEmail();
-            String password = view.getPassword();
-            String username = view.getUsername();
-            String id = view.getID();
-            String role = view.getRole();
-
-            // Determinar el tipo de usuario (user o admin)
-            String userType = (role.equals("Administrador")) ? "admin" : "user";
-
-            // Crear la línea en el formato correcto
-            String userLine = String.format("%s|%s|%s|%s (%s)", 
-                userType, username, password, username, id);
-
             try {
-                // Guardar en el archivo
-                saveUserToFile(userLine);
+                if (!validateForm()) return;
+
+                String userData = String.format("%s|%s|%s|%s (%s)|%s",
+                    view.getRole().equals("Administrador") ? "admin" : "user",
+                    view.getUsername(),
+                    view.getPassword(),
+                    view.getUsername(),
+                    view.getID(),
+                    view.getEmail());
+
+                saveUserData(userData);
                 
-                // Mostrar mensaje de éxito
-                view.showMessage("Usuario registrado exitosamente!", "Éxito");
+                view.showMessage("¡Registro exitoso!", "Éxito");
                 view.close();
-            } catch (IOException ex) {
-                view.showError("Error al guardar el usuario: " + ex.getMessage());
+                
+            } catch (Exception ex) {
+                handleRegistrationError(ex);
             }
         }
 
-        private void saveUserToFile(String userLine) throws IOException {
-            // Usar try-with-resources para asegurar que el archivo se cierre correctamente
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(USERS_FILE, true))) {
+        private void saveUserData(String data) throws IOException {
+            try (BufferedWriter writer = new BufferedWriter(
+                new FileWriter(USERS_FILE, true))) {
                 
-                 // Si el archivo no está vacío, agregar un salto de línea antes del nuevo registro
-                    if (Files.size(Paths.get(USERS_FILE)) > 0) {
-                        writer.newLine();
-                    }
-                writer.write(userLine);
+                if (new File(USERS_FILE).length() > 0) {
+                    writer.newLine();
+                }
+                writer.write(data);
+                System.out.println("Datos guardados correctamente en: " + USERS_FILE);
             }
+        }
+
+        private void handleRegistrationError(Exception ex) {
+            System.err.println("ERROR EN REGISTRO: " + ex.getMessage());
+            view.showError("Error al registrar: " + ex.getMessage());
+            ex.printStackTrace();
+            
+            // Mostrar información adicional para debug
+            System.out.println("Ruta actual del archivo: " + USERS_FILE);
+            System.out.println("El archivo existe: " + new File(USERS_FILE).exists());
         }
 
         private boolean validateForm() {
-            // Validar email
-            if (view.getEmail().isEmpty()) {
-                view.showError("El email es requerido");
+            // Validación de email
+            if (view.getEmail().isEmpty() || !view.getEmail().contains("@")) {
+                view.showError("Ingrese un email válido");
                 return false;
             }
 
-            // Validar contraseña
+            // Validación de contraseña
             String password = view.getPassword();
-            if (password.isEmpty()) {
-                view.showError("La contraseña es requerida");
-                return false;
-            }
-            if (!isValidPassword(password)) {
-                view.showError("La contraseña no cumple con los requisitos");
-                return false;
-            }
-
-            // Validar nombre de usuario
-            String username = view.getUsername();
-            if (username.isEmpty()) {
-                view.showError("El nombre de usuario es requerido");
-                return false;
-            }
-            if (!username.matches("^[a-zA-Z0-9]+$")) {
-                view.showError("El nombre de usuario solo puede contener caracteres alfanuméricos");
+            if (password.length() < 8 || 
+                !password.matches(".*\\d.*") || 
+                !password.matches(".*[a-z].*")) {
+                view.showError("La contraseña debe tener al menos 8 caracteres, un número y una letra minúscula");
                 return false;
             }
 
-            // Validar cédula
-            String id = view.getID();
-            if (id.isEmpty()) {
-                view.showError("La cédula es requerida");
+            // Validación de nombre de usuario
+            if (!view.getUsername().matches("[a-zA-Z0-9]+")) {
+                view.showError("El nombre de usuario solo puede contener letras y números");
                 return false;
             }
-            if (!id.matches("^[0-9]+$")) {
+
+            // Validación de cédula
+            if (!view.getID().matches("\\d+")) {
                 view.showError("La cédula solo puede contener números");
                 return false;
             }
 
-            // Validar rol
+            // Validación de rol
             if (view.getRole().equals("Rol")) {
-                view.showError("Debe seleccionar un rol");
+                view.showError("Seleccione un rol válido");
                 return false;
             }
 
             return true;
-        }
-
-        private boolean isValidPassword(String password) {
-            // Validación 1: Al menos 15 caracteres
-            if (password.length() >= 15) {
-                return true;
-            }
-            
-            // Validación 2: Al menos 8 caracteres con un número y una minúscula
-            if (password.length() >= 8 && 
-                password.matches(".*[0-9].*") && 
-                password.matches(".*[a-z].*")) {
-                return true;
-            }
-            
-            return false;
         }
     }
 }

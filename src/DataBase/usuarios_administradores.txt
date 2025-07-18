@@ -1,4 +1,0 @@
-user|test|123|Usuario Test
-user|juan|clave123|Juan Pérez
-admin|admin|456|Administrador Principal
-admin|maria|admin123|María González
