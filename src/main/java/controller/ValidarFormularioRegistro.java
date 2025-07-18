@@ -14,7 +14,7 @@ public class ValidarFormularioRegistro {
                 return false;
             }
             if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-                errorMessage = "El nombre de usuario solo puede contener caracteres alfanuméricos";
+                errorMessage = "Ingrese un email valido";
                 return false;
             }
 

@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
+//import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class RegistrationController {
@@ -30,7 +30,7 @@ public class RegistrationController {
         String[] possiblePaths = {
             projectPath + "/Database/selecciones/usuarios_administradores.txt",
             projectPath + "/src/Database/selecciones/usuarios_administradores.txt",
-            projectPath + "/target/classes/Database/selecciones/usuarios_administradores.txt"
+            projectPath + "/target/classes/Database/selecciones/usuarios_administradores.txt",
         };
 
         // 3. Buscar el archivo en las ubicaciones posibles
@@ -58,7 +58,13 @@ public class RegistrationController {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                if (!validateForm()) return;
+
+                
+                ValidarFormularioRegistro val = new ValidarFormularioRegistro();
+                if(!val.validateForm(view.getEmail(), view.getPassword(), view.getUsername(), view.getID(), view.getRole())) {
+                    view.showError(val.errorMessage);
+                    return;
+                }
 
                 String userData = String.format("%s|%s|%s|%s (%s)|%s",
                     view.getRole().equals("Administrador") ? "admin" : "user",
@@ -100,41 +106,5 @@ public class RegistrationController {
             System.out.println("El archivo existe: " + new File(USERS_FILE).exists());
         }
 
-        private boolean validateForm() {
-            // Validación de email
-            if (view.getEmail().isEmpty() || !view.getEmail().contains("@")) {
-                view.showError("Ingrese un email válido");
-                return false;
-            }
-
-            // Validación de contraseña
-            String password = view.getPassword();
-            if (password.length() < 8 || 
-                !password.matches(".*\\d.*") || 
-                !password.matches(".*[a-z].*")) {
-                view.showError("La contraseña debe tener al menos 8 caracteres, un número y una letra minúscula");
-                return false;
-            }
-
-            // Validación de nombre de usuario
-            if (!view.getUsername().matches("[a-zA-Z0-9]+")) {
-                view.showError("El nombre de usuario solo puede contener letras y números");
-                return false;
-            }
-
-            // Validación de cédula
-            if (!view.getID().matches("\\d+")) {
-                view.showError("La cédula solo puede contener números");
-                return false;
-            }
-
-            // Validación de rol
-            if (view.getRole().equals("Rol")) {
-                view.showError("Seleccione un rol válido");
-                return false;
-            }
-
-            return true;
-        }
     }
 }

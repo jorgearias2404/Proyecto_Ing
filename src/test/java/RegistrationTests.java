@@ -1,7 +1,5 @@
 import org.junit.Assert;
 import org.junit.Test;
-
-import Services.AuthService;
 import controller.ValidarFormularioRegistro;
 
 public class RegistrationTests {
@@ -48,9 +46,5 @@ public class RegistrationTests {
         Assert.assertEquals(false, val.validateForm("sergioferg.2003@gmail.com", "contra123", "123456", "30142272", "Rol"));
 
         Assert.assertEquals("Debe seleccionar un rol", val.errorMessage);
-    }
-
-    public void testLogin() {
-        Assert.assertEquals(false, AuthService.validarLogin("", "", true));
     }
 }
