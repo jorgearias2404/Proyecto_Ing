@@ -5,13 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
-public class CalculadoraCCB extends JFrame {
+public class CargaCCB extends JFrame {
 
     private JTextField txtCostosFijos, txtCostosVariables, txtBandejas, txtMerma;
     private JLabel lblResultado;
     private Op_Usuario opUsuario; // Referencia a la ventana de opciones de usuario
 
-    public CalculadoraCCB(Op_Usuario opUsuario) {
+    public CargaCCB(Op_Usuario opUsuario) {
         this.opUsuario = opUsuario;
         initComponents();
     }
@@ -19,7 +19,7 @@ public class CalculadoraCCB extends JFrame {
     private void initComponents(){
         // Configuración de la ventana
         setTitle("Calculadora CCB");
-        setSize(400, 300);
+        setSize(400, 325);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(null);
         Color COLOR_FONDO = new Color(7, 64, 91);
@@ -100,34 +100,25 @@ public class CalculadoraCCB extends JFrame {
         btnCalcular.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                calcularCCB();
+                double ccb = controller.CalculadoraCCB.calcularCCB(txtCostosFijos.getText(), txtCostosVariables.getText(), txtBandejas.getText(), txtMerma.getText());
+                if(ccb == 0) {
+                    lblResultado.setText("Numero invalido");
+                    return;
+                }
+
+
+                // Formatear el resultado a 2 decimales
+                DecimalFormat df = new DecimalFormat("#.##");
+                lblResultado.setText("CCB: " + df.format(ccb));
+
             }
         });
     }
 
-    private void calcularCCB() {
-        try {
-            // Obtener valores de los campos
-            double costosFijos = Double.parseDouble(txtCostosFijos.getText());
-            double costosVariables = Double.parseDouble(txtCostosVariables.getText());
-            double bandejas = Double.parseDouble(txtBandejas.getText());
-            double merma = Double.parseDouble(txtMerma.getText()) / 100; // Convertir % a decimal
-
-            // Calcular CCB según la fórmula
-            double ccb = ((costosFijos + costosVariables) / bandejas) * (1 + merma);
-
-            // Formatear el resultado a 2 decimales
-            DecimalFormat df = new DecimalFormat("#.##");
-            lblResultado.setText("CCB: " + df.format(ccb));
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "¡Error! Ingresa valores numéricos válidos.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-  public static void main(String[] args) {
-    SwingUtilities.invokeLater(() -> {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
         Op_Usuario opUsuario = new Op_Usuario("NombreUsuario"); 
-        CalculadoraCCB ventana = new CalculadoraCCB(opUsuario); // Pasa la referencia de Op_Usuario
+        CargaCCB ventana = new CargaCCB(opUsuario); // Pasa la referencia de Op_Usuario
         ventana.setVisible(true);
     });
   }
