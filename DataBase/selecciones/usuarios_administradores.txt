@@ -1,0 +1,7 @@
+user|test|123|Usuario Test
+user|juan|clave123|Juan Pérez
+admin|admin|456|Administrador Principal
+admin|maria|admin123|María González
+user|Jorge Arias|Mellamojorge2404|Jorge Arias (30245916)|ja549655@gmail.com
+user|Jorge|Mellamojorge2404|Jorge (30245916)|ja549655@gmail.com
+user|Jorge|Mellamojorge2404|Jorge (30245916)|ja549655@gmail.com

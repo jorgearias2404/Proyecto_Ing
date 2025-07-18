@@ -65,9 +65,9 @@ public class LoginController {
         loginView.close();
         SwingUtilities.invokeLater(() -> {
             Registration registration = new Registration();
+            new RegistrationController(registration);
             registration.setVisible(true);
         });
     }
 }
-
 

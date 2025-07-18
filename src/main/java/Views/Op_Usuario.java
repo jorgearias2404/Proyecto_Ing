@@ -46,7 +46,7 @@ public class Op_Usuario extends JFrame {
         panelPrincipal.add(botonReserva);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        botonHistorial = crearBoton("VER HISTORIAL");
+        botonHistorial = crearBoton("CALCULADORA CCB");
         panelPrincipal.add(botonHistorial);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
@@ -71,15 +71,19 @@ public class Op_Usuario extends JFrame {
         return boton;
     }
 
-    // Métodos para el controlador
+    // metodos para el controlador
     public void addReservaListener(ActionListener listener) {
         botonReserva.addActionListener(listener);
     }
 
-    public void addHistorialListener(ActionListener listener) {
-        botonHistorial.addActionListener(listener);
-    }
-
+    // Metodo que se modificado en Op_Usuario
+     public void addHistorialListener(ActionListener listener) {
+         botonHistorial.addActionListener(e -> {
+        this.setVisible(false); // Oculta la ventana actual
+        CalculadoraCCB calculadora = new CalculadoraCCB(this); // Crea una nueva instancia de CalculadoraCCB
+        calculadora.setVisible(true);
+    });
+}
     public void addRecargarListener(ActionListener listener) {
         botonRecargar.addActionListener(listener);
     }
