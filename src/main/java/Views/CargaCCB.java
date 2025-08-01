@@ -117,7 +117,7 @@ public class CargaCCB extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-        Op_Usuario opUsuario = new Op_Usuario("NombreUsuario"); 
+        Op_Usuario opUsuario = new Op_Usuario("UsuarioDemo", false); // Simulación de usuario actual
         CargaCCB ventana = new CargaCCB(opUsuario); // Pasa la referencia de Op_Usuario
         ventana.setVisible(true);
     });
