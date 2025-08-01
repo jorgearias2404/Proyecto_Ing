@@ -3,6 +3,7 @@ package controller;
 import Views.MenuComedorUniversitario;
 import Views.Op_Usuario;
 import javax.swing.*;
+//import Services.AuthService;
 import java.awt.*;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class MenuComedorController {
     private final MenuComedorUniversitario view;
     private final List<String> selecciones;
     private final String usuarioActual;
+    private final boolean esAdmin;
     
     private static final Color COLOR_FONDO = new Color(7, 64, 91);
     private static final Color COLOR_TEXTO = new Color(240, 240, 240);
@@ -24,10 +26,11 @@ public class MenuComedorController {
     private static final int ANCHO_IMAGEN = 120;
     private static final int ALTO_IMAGEN = 120;
 
-    public MenuComedorController(MenuComedorUniversitario view, String usuario) {
+    public MenuComedorController(MenuComedorUniversitario view, String usuario, boolean esAdmin) {
         this.view = view;
         this.selecciones = new ArrayList<>();
         this.usuarioActual = usuario;
+        this.esAdmin = esAdmin;
         initController();
     }
 
@@ -87,8 +90,8 @@ public class MenuComedorController {
  private void volverAOpUsuario() {
     view.cerrarVentana();
     SwingUtilities.invokeLater(() -> {
-        Op_Usuario opUsuario = new Op_Usuario(usuarioActual);
-        new OpUsuarioController(opUsuario, usuarioActual); // Conectamos el controlador
+        Op_Usuario opUsuario = new Op_Usuario(usuarioActual, esAdmin);
+        new OpUsuarioController(opUsuario, usuarioActual, esAdmin); // Conectamos el controlador
         opUsuario.setVisible(true);
     });
 }

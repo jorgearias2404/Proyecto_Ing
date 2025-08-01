@@ -3,7 +3,6 @@ package Views;
 import javax.swing.*;
 import controller.MonederoController;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MonederoEstudiantil extends JFrame {
@@ -22,7 +21,7 @@ public class MonederoEstudiantil extends JFrame {
     private final Color COLOR_PANEL = new Color(44, 62, 80);
     private final Color COLOR_CAMPOS = new Color(200, 220, 230);
     private final Color COLOR_ETIQUETAS = new Color(180, 220, 240);
-    private final Color COLOR_ERROR = new Color(231, 76, 60);
+   
 
     public MonederoEstudiantil(String usuario) {
         setTitle("Monedero Estudiantil - " + usuario);

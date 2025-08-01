@@ -1,6 +1,7 @@
 package Views;
 
 import javax.swing.*;
+import controller.RegistrationController;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -17,14 +18,12 @@ public class Registration extends JFrame {
     }
 
     private void initComponents() {
-        // Configuración básica de la ventana
         setSize(500, 650);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setTitle("Registro de nuevo usuario");
         setLocationRelativeTo(null);
 
-        // Colores principales
         Color bgColor = new Color(7, 64, 91);
         Color textColor = new Color(240, 240, 240);
         Color inputColor = new Color(151, 188, 199);
@@ -42,7 +41,6 @@ public class Registration extends JFrame {
         addRegisterButton(buttonColor, textButtonColor);
     }
 
-    // Métodos para el controlador
     public void setRegisterListener(ActionListener listener) {
         this.registerListener = listener;
     }
@@ -204,27 +202,35 @@ public class Registration extends JFrame {
     }
 
     private void addRegisterButton(Color buttonColor, Color textButtonColor) {
-        registerButton = new JButton("REGISTARSE >");
+        registerButton = new JButton("REGISTRARSE >");
         registerButton.setBounds(15, 450, 455, 50);
         registerButton.setBackground(buttonColor);
         registerButton.setForeground(textButtonColor);
         registerButton.setFont(new Font("Arial", Font.BOLD, 16));
         registerButton.setBorderPainted(false);
         registerButton.setFocusPainted(false);
-        registerButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
         registerButton.addActionListener(e -> {
             if (registerListener != null) {
-                registerListener.actionPerformed(e);
+                registerListener.actionPerformed(
+                    new java.awt.event.ActionEvent(registerButton, java.awt.event.ActionEvent.ACTION_PERFORMED, e.getActionCommand())
+                );
             }
         });
+        
         registrationPanel.add(registerButton);
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            Registration view = new Registration();
-            new controller.RegistrationController(view); // Conectamos el controlador
-            view.setVisible(true);
+            try {
+                Registration view = new Registration();
+                RegistrationController controller = new RegistrationController(view);
+                view.setVisible(true);
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error al iniciar la aplicación: " + e.getMessage(), 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
     }
 }

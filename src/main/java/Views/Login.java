@@ -49,7 +49,7 @@ public class Login extends JFrame {
             BorderFactory.createLineBorder(colorBordeInput),
             BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
-        JLabel lblUsuario = new JLabel("CORREO - USUARIO");
+        JLabel lblUsuario = new JLabel("USUARIO");
         lblUsuario.setForeground(colorTexto);
         lblUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelCentral.add(lblUsuario);

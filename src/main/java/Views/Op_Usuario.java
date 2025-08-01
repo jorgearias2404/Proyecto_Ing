@@ -9,12 +9,13 @@ public class Op_Usuario extends JFrame {
     private JButton botonHistorial;
     private JButton botonRecargar;
     private JButton botonSalir;
+    private JButton botonAdminMenu;
     
-    public Op_Usuario(String usuario) {
-        initComponents(usuario);
+    public Op_Usuario(String usuario, boolean esAdmin) {
+        initComponents(usuario, esAdmin);
     }
 
-    private void initComponents(String usuario) {
+    private void initComponents(String usuario, boolean esAdmin) {
         setTitle("Opciones Usuario - " + usuario);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 500);
@@ -46,12 +47,17 @@ public class Op_Usuario extends JFrame {
         panelPrincipal.add(botonReserva);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        botonHistorial = crearBoton("VER HISTORIAL");
+        botonHistorial = crearBoton("CALCULADORA CCB");
         panelPrincipal.add(botonHistorial);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
         botonRecargar = crearBoton("RECARGAR MONEDERO");
         panelPrincipal.add(botonRecargar);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        botonAdminMenu = crearBoton("ADMINISTRAR MENÚS");
+        botonAdminMenu.setVisible(esAdmin); // Solo visible si es admin
+        panelPrincipal.add(botonAdminMenu);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
         botonSalir = crearBoton("CERRAR SESIÓN");
@@ -71,15 +77,19 @@ public class Op_Usuario extends JFrame {
         return boton;
     }
 
-    // Métodos para el controlador
+    // metodos para el controlador
     public void addReservaListener(ActionListener listener) {
         botonReserva.addActionListener(listener);
     }
 
-    public void addHistorialListener(ActionListener listener) {
-        botonHistorial.addActionListener(listener);
-    }
-
+    // Metodo que se modificado en Op_Usuario
+     public void addHistorialListener(ActionListener listener) {
+         botonHistorial.addActionListener(e -> {
+        this.setVisible(false); // Oculta la ventana actual
+        CargaCCB calculadora = new CargaCCB(this); // Crea una nueva instancia de CalculadoraCCB
+        calculadora.setVisible(true);
+    });
+}
     public void addRecargarListener(ActionListener listener) {
         botonRecargar.addActionListener(listener);
     }
@@ -92,7 +102,13 @@ public class Op_Usuario extends JFrame {
         JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 
+     public void addAdminMenuListener(ActionListener listener) {
+        botonAdminMenu.addActionListener(listener);
+    }
+
     public void cerrarVentana() {
         this.dispose();
     }
 }
+    
+

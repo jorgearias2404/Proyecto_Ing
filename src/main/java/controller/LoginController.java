@@ -32,7 +32,7 @@ public class LoginController {
             return;
         }
 
-        boolean isAdmin = false;
+        boolean isAdmin = "admin".equals(username);;
         boolean loginExitoso = authService.validarLogin(username, password, isAdmin);
         
         if (!loginExitoso) {
@@ -55,8 +55,8 @@ public class LoginController {
         loginView.close();
         
         SwingUtilities.invokeLater(() -> {
-            Op_Usuario opUsuario = new Op_Usuario(username);
-            new OpUsuarioController(opUsuario, username); // conectamos el controlador
+            Op_Usuario opUsuario = new Op_Usuario(username, isAdmin);
+            new OpUsuarioController(opUsuario, username, isAdmin); // conectamos el controlador
             opUsuario.setVisible(true);
         });
     }
@@ -65,9 +65,8 @@ public class LoginController {
         loginView.close();
         SwingUtilities.invokeLater(() -> {
             Registration registration = new Registration();
+            new RegistrationController(registration);
             registration.setVisible(true);
         });
     }
 }
-
-
