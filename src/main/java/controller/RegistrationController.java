@@ -98,27 +98,37 @@ public class RegistrationController {
             return checkIfExistsInFile(id, 4);
         }
 
-        private boolean checkIfExistsInFile(String value, int position) throws IOException {
-            File file = new File(USERS_FILE);
-            if (!file.exists()) return false;
+       private boolean checkIfExistsInFile(String value, int position) throws IOException {
+    File file = new File(USERS_FILE);
+    if (!file.exists()) return false;
 
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split("\\|");
-                    if (parts.length > position) {
-                        if (position == 4) {
-                            String idPart = parts[4];
-                            String idValue = idPart.substring(idPart.indexOf("(") + 1, idPart.indexOf(")"));
+    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split("\\|");
+            if (parts.length > position) {
+                if (position == 4) {
+                    // Extraer la cédula de forma más segura
+                    String idPart = parts[4];
+                    try {
+                        int start = idPart.indexOf("(");
+                        int end = idPart.indexOf(")");
+                        if (start != -1 && end != -1 && end > start) {
+                            String idValue = idPart.substring(start + 1, end);
                             if (idValue.equals(value)) return true;
-                        } else if (parts[position].equals(value)) {
-                            return true;
                         }
+                    } catch (StringIndexOutOfBoundsException e) {
+                        System.err.println("Error procesando cédula en línea: " + line);
+                        continue;
                     }
+                } else if (parts[position].equals(value)) {
+                    return true;
                 }
             }
-            return false;
         }
+    }
+    return false;
+}
 
         private void saveUserData(String data) throws IOException {
             try (BufferedWriter writer = new BufferedWriter(

@@ -198,6 +198,7 @@ public class Registration extends JFrame {
         roleSelectionMenu.setFont(new Font("Arial", Font.BOLD, 14));
         roleSelectionMenu.setBackground(inputColor);
         roleSelectionMenu.setForeground(Color.BLACK);
+        roleSelectionMenu.setSelectedIndex(0);
         registrationPanel.add(roleSelectionMenu);
     }
 
