@@ -77,6 +77,10 @@ public class Registration extends JFrame {
         JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
+    public String showAdminPasswordDialog() {
+        return JOptionPane.showInputDialog(this, "Escriba contraseña para el administrador:", "Contraseña de Administrador", JOptionPane.QUESTION_MESSAGE);
+    }
+
     private void addMainPanel(Color textColor, Color bgColor) {
         registrationPanel = new JPanel();
         registrationPanel.setLayout(null);
@@ -198,6 +202,7 @@ public class Registration extends JFrame {
         roleSelectionMenu.setFont(new Font("Arial", Font.BOLD, 14));
         roleSelectionMenu.setBackground(inputColor);
         roleSelectionMenu.setForeground(Color.BLACK);
+        roleSelectionMenu.setSelectedIndex(0);
         registrationPanel.add(roleSelectionMenu);
     }
 

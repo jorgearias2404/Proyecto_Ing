@@ -9,12 +9,13 @@ public class Op_Usuario extends JFrame {
     private JButton botonHistorial;
     private JButton botonRecargar;
     private JButton botonSalir;
+    private JButton botonAdminMenu;
     
-    public Op_Usuario(String usuario) {
-        initComponents(usuario);
+    public Op_Usuario(String usuario, boolean esAdmin) {
+        initComponents(usuario, esAdmin);
     }
 
-    private void initComponents(String usuario) {
+    private void initComponents(String usuario, boolean esAdmin) {
         setTitle("Opciones Usuario - " + usuario);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 500);
@@ -52,6 +53,11 @@ public class Op_Usuario extends JFrame {
 
         botonRecargar = crearBoton("RECARGAR MONEDERO");
         panelPrincipal.add(botonRecargar);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        botonAdminMenu = crearBoton("ADMINISTRAR MENÚS");
+        botonAdminMenu.setVisible(esAdmin); // Solo visible si es admin
+        panelPrincipal.add(botonAdminMenu);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
         botonSalir = crearBoton("CERRAR SESIÓN");
@@ -96,7 +102,13 @@ public class Op_Usuario extends JFrame {
         JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 
+     public void addAdminMenuListener(ActionListener listener) {
+        botonAdminMenu.addActionListener(listener);
+    }
+
     public void cerrarVentana() {
         this.dispose();
     }
 }
+    
+

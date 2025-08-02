@@ -1,74 +1,57 @@
 package controller;
 
 public class ValidarFormularioRegistro {
-    public String errorMessage;
-
-    public ValidarFormularioRegistro() {
-        this.errorMessage = "exito";
-    }
+    public String errorMessage = "";
+    private static final String ADMIN_PASSWORD = "admin12345";
 
     public boolean validateForm(String email, String password, String username, String id, String role) {
-        // Validar email
-            if (email.isEmpty()) {
-                errorMessage = "El email es requerido";
-                return false;
-            }
-            if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-                errorMessage = "Ingrese un email valido";
-                return false;
-            }
+        if (email.isEmpty() || password.isEmpty() || username.isEmpty() || id.isEmpty() || role.equals("Rol")) {
+            errorMessage = "Todos los campos marcados con * son obligatorios";
+            return false;
+        }
 
-            // Validar contraseña
-            if (password.isEmpty()) {
-                errorMessage = "La contraseña es requerida";
-                return false;
-            }
-            if (!isValidPassword(password)) {
-                errorMessage = "La contraseña no cumple con los requisitos";
-                return false;
-            }
+        if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            errorMessage = "El formato del email no es válido";
+            return false;
+        }
 
-            // Validar nombre de usuario
-            if (username.isEmpty()) {
-                errorMessage = "El nombre de usuario es requerido";
-                return false;
+        if (!isValidPassword(password, role)) {
+            if (role.equals("Administrador")) {
+                errorMessage = "Para rol Administrador, la contraseña debe ser: " + ADMIN_PASSWORD;
+            } else {
+                errorMessage = "La contraseña debe tener al menos 15 caracteres O al menos 8 caracteres incluyendo un número y una letra minúscula";
             }
-            if (!username.matches("^[a-zA-Z0-9]+$")) {
-                errorMessage = "El nombre de usuario solo puede contener caracteres alfanuméricos";
-                return false;
-            }
+            return false;
+        }
 
-            // Validar cédula
-            if (id.isEmpty()) {
-                errorMessage = "La cédula es requerida";
-                return false;
-            }
-            if (!id.matches("^[0-9]+$")) {
-                errorMessage = "La cédula solo puede contener números";
-                return false;
-            }
+        if (!username.matches("^[a-zA-Z0-9]+$")) {
+            errorMessage = "El nombre de usuario solo puede contener caracteres alfanuméricos";
+            return false;
+        }
 
-            // Validar rol
-        if (role.equals("Rol")) {
-            errorMessage = "Debe seleccionar un rol";
+        if (!id.matches("^\\d+$")) {
+            errorMessage = "La cédula solo puede contener números";
             return false;
         }
 
         return true;
     }
 
-    private static boolean isValidPassword(String password) {
+    public boolean validateAdminPassword(String password) {
+        return password.equals(ADMIN_PASSWORD);
+    }
+
+    private boolean isValidPassword(String password, String role) {
+        if (role.equals("Administrador")) {
+            return password.equals(ADMIN_PASSWORD);
+        }
+        
         if (password.length() >= 15) {
-                return true;
-            }
-            
-            // Validación 2: Al menos 8 caracteres con un número y una minúscula
-            if (password.length() >= 8 && 
-                password.matches(".*[0-9].*") && 
-                password.matches(".*[a-z].*")) {
-                return true;
-            }
-            
-            return false;
+            return true;
+        }
+        
+        return password.length() >= 8 && 
+               password.matches(".*\\d.*") && 
+               password.matches(".*[a-z].*");
     }
 }

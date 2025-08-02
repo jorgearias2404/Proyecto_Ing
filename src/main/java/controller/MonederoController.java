@@ -16,10 +16,12 @@ public class MonederoController {
     private final Map<String, Estudiante> baseDatos;
     private double saldo = 0.0;
     private final String usuarioActual;
+    private final boolean esAdmin;
 
-    public MonederoController(MonederoEstudiantil view, String usuario) {
+    public MonederoController(MonederoEstudiantil view, String usuario, boolean esAdmin) {
         this.view = view;
         this.usuarioActual = usuario;
+        this.esAdmin = esAdmin;
         this.baseDatos = new HashMap<>();
         cargarBaseDatos();
         configurarListeners();
@@ -142,8 +144,8 @@ public class MonederoController {
    public void regresarAUsuario(java.awt.event.ActionEvent e) {
     view.cerrarVentana();
     SwingUtilities.invokeLater(() -> {
-        Op_Usuario opUsuario = new Op_Usuario(usuarioActual);
-        new OpUsuarioController(opUsuario, usuarioActual); // Conectamos el controlador
+        Op_Usuario opUsuario = new Op_Usuario(usuarioActual, this.esAdmin);
+        new OpUsuarioController(opUsuario, usuarioActual, this.esAdmin); // Conectamos el controlador
         opUsuario.setVisible(true);
     });
 }

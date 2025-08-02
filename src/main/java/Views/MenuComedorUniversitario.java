@@ -154,8 +154,11 @@ public class MenuComedorUniversitario extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-        MenuComedorUniversitario view = new MenuComedorUniversitario("UsuarioDemo");
-        MenuComedorController controller = new MenuComedorController(view, "UsuarioDemo");
+            String usuario = "UsuarioDemo";
+        boolean esAdmin = false; // o true si es admin
+        String usuarioActual = usuario; // Simulación de usuario actual
+        MenuComedorUniversitario view = new MenuComedorUniversitario(usuarioActual);
+        MenuComedorController controller = new MenuComedorController(view, usuarioActual, esAdmin);
         view.setController(controller);
         view.setVisible(true);
     });

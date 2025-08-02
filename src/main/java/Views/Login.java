@@ -1,4 +1,5 @@
 package Views;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -49,7 +50,7 @@ public class Login extends JFrame {
             BorderFactory.createLineBorder(colorBordeInput),
             BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
-        JLabel lblUsuario = new JLabel("CORREO - USUARIO");
+        JLabel lblUsuario = new JLabel("USUARIO");
         lblUsuario.setForeground(colorTexto);
         lblUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelCentral.add(lblUsuario);
@@ -140,7 +141,7 @@ public class Login extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Login view = new Login();
-            new controller.LoginController(view); // Conectamos el controlador
+            new controller.LoginController(view);
             view.setVisible(true);
         });
     }
