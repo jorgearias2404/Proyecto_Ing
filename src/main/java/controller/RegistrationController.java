@@ -3,12 +3,13 @@ package controller;
 import Views.Registration;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-//import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class RegistrationController {
@@ -22,18 +23,15 @@ public class RegistrationController {
     }
 
     private static String getAbsoluteDatabasePath() {
-        // 1. Primero intentamos encontrar la ruta base del proyecto
         String projectPath = System.getProperty("user.dir");
         System.out.println("Directorio actual: " + projectPath);
 
-        // 2. Posibles ubicaciones del archivo
         String[] possiblePaths = {
             projectPath + "/Database/selecciones/usuarios_administradores.txt",
             projectPath + "/src/Database/selecciones/usuarios_administradores.txt",
             projectPath + "/target/classes/Database/selecciones/usuarios_administradores.txt",
         };
 
-        // 3. Buscar el archivo en las ubicaciones posibles
         for (String path : possiblePaths) {
             if (Files.exists(Paths.get(path))) {
                 System.out.println("Archivo encontrado en: " + path);
@@ -42,7 +40,6 @@ public class RegistrationController {
             System.out.println("No encontrado en: " + path);
         }
 
-        // 4. Si no se encuentra, crear la estructura de directorios
         String defaultPath = projectPath + "/Database/selecciones/usuarios_administradores.txt";
         try {
             Files.createDirectories(Paths.get(defaultPath).getParent());
@@ -50,7 +47,7 @@ public class RegistrationController {
             return defaultPath;
         } catch (IOException e) {
             System.err.println("Error al crear directorios: " + e.getMessage());
-            return defaultPath; // Retornamos la ruta igualmente
+            return defaultPath;
         }
     }
 
@@ -58,11 +55,20 @@ public class RegistrationController {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-
-                
                 ValidarFormularioRegistro val = new ValidarFormularioRegistro();
-                if(!val.validateForm(view.getEmail(), view.getPassword(), view.getUsername(), view.getID(), view.getRole())) {
+                if(!val.validateForm(view.getEmail(), view.getPassword(), 
+                   view.getUsername(), view.getID(), view.getRole())) {
                     view.showError(val.errorMessage);
+                    return;
+                }
+
+                if (isEmailRegistered(view.getEmail())) {
+                    view.showError("Ya existe un usuario registrado con este correo");
+                    return;
+                }
+
+                if (isIDRegistered(view.getID())) {
+                    view.showError("Ya existe un usuario registrado con esta cédula");
                     return;
                 }
 
@@ -84,6 +90,36 @@ public class RegistrationController {
             }
         }
 
+        private boolean isEmailRegistered(String email) throws IOException {
+            return checkIfExistsInFile(email, 5);
+        }
+
+        private boolean isIDRegistered(String id) throws IOException {
+            return checkIfExistsInFile(id, 4);
+        }
+
+        private boolean checkIfExistsInFile(String value, int position) throws IOException {
+            File file = new File(USERS_FILE);
+            if (!file.exists()) return false;
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split("\\|");
+                    if (parts.length > position) {
+                        if (position == 4) {
+                            String idPart = parts[4];
+                            String idValue = idPart.substring(idPart.indexOf("(") + 1, idPart.indexOf(")"));
+                            if (idValue.equals(value)) return true;
+                        } else if (parts[position].equals(value)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
         private void saveUserData(String data) throws IOException {
             try (BufferedWriter writer = new BufferedWriter(
                 new FileWriter(USERS_FILE, true))) {
@@ -101,10 +137,8 @@ public class RegistrationController {
             view.showError("Error al registrar: " + ex.getMessage());
             ex.printStackTrace();
             
-            // Mostrar información adicional para debug
             System.out.println("Ruta actual del archivo: " + USERS_FILE);
             System.out.println("El archivo existe: " + new File(USERS_FILE).exists());
         }
-
     }
 }

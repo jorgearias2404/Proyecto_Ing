@@ -1,4 +1,5 @@
 package Views;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -140,7 +141,7 @@ public class Login extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Login view = new Login();
-            new controller.LoginController(view); // Conectamos el controlador
+            new controller.LoginController(view);
             view.setVisible(true);
         });
     }

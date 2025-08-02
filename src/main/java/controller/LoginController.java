@@ -1,4 +1,3 @@
-
 package controller;
 
 import Services.AuthService;
@@ -11,6 +10,7 @@ import java.awt.event.ActionEvent;
 public class LoginController {
     private final Login loginView;
     private final AuthService authService;
+    private static final String ADMIN_SECRET_KEY = "claveAdmin123"; // Clave especial para administradores
     
     public LoginController(Login loginView) {
         this.loginView = loginView;
@@ -32,14 +32,22 @@ public class LoginController {
             return;
         }
 
-        boolean isAdmin = "admin".equals(username);;
-        boolean loginExitoso = authService.validarLogin(username, password, isAdmin);
-        
-        if (!loginExitoso) {
-            isAdmin = true;
-            loginExitoso = authService.validarLogin(username, password, isAdmin);
+        // Verificar si es intento de login como admin
+        boolean isAdmin = username.startsWith("admin_");
+        if (isAdmin) {
+            String secretKey = JOptionPane.showInputDialog(loginView, 
+                "Ingrese la clave especial de administrador:", 
+                "Clave de Administrador", 
+                JOptionPane.PLAIN_MESSAGE);
+            
+            if (!ADMIN_SECRET_KEY.equals(secretKey)) {
+                loginView.showError("Clave de administrador incorrecta");
+                return;
+            }
         }
 
+        boolean loginExitoso = authService.validarLogin(username, password, isAdmin);
+        
         if (loginExitoso) {
             handleSuccessfulLogin(username, isAdmin);
         } else {
@@ -56,7 +64,7 @@ public class LoginController {
         
         SwingUtilities.invokeLater(() -> {
             Op_Usuario opUsuario = new Op_Usuario(username, isAdmin);
-            new OpUsuarioController(opUsuario, username, isAdmin); // conectamos el controlador
+            new OpUsuarioController(opUsuario, username, isAdmin);
             opUsuario.setVisible(true);
         });
     }
