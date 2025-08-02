@@ -1,23 +1,20 @@
 package Views;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.event.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class VistaImagen extends JFrame {
     JPanel panel;
     JButton botonCargarImagen;
 
     public VistaImagen() {
-        setSize(500, 500);
+        setSize(400, 250);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setTitle("Reconocimiento Facial COMEST");
         setLocationRelativeTo(null);
         agregarPanel(); 
-        agregarDescripcion();
-        agregarCantidad();
-        agregarCosto();
         agregarBotonCargarImagen();
     }
 
@@ -46,48 +43,29 @@ public class VistaImagen extends JFrame {
         return null;
     }
 
-
-    private void agregarDescripcion() {
-
-        JLabel etiquetaDesc = new JLabel("Descripción: ");
-        etiquetaDesc.setBounds(15,35,75,20);
-        etiquetaDesc.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(etiquetaDesc);
-
-    }
-
-    private void agregarCantidad(){
-
-        // AGREGA LA ETIQUETA DE CANTIDAD
-        JLabel etiquetaCant = new JLabel();
-        etiquetaCant.setText("Cantidad:");
-        etiquetaCant.setBounds(15,70,75,20); 
-        etiquetaCant.setHorizontalAlignment(SwingConstants.CENTER);
-        panel.add(etiquetaCant);
-
-    }
-
-     private void agregarCosto(){
-        // AGREGA LA ETIQUETA DE COSTO UNITARIO
-        JLabel etiquetaCostoUni = new JLabel();
-        etiquetaCostoUni.setText("Costo Unitario (Bs.):");
-        etiquetaCostoUni.setBounds(220,70,145,20);
-        etiquetaCostoUni.setHorizontalAlignment(SwingConstants.CENTER); 
-
-        panel.add(etiquetaCostoUni);
-
+    public void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     private void agregarBotonCargarImagen() {
+        Color colorBoton = new Color(151, 188, 199);
+        Color colorBotonTexto = new Color(0, 0, 0);
+        
         botonCargarImagen = new JButton("Tomar Imagen");
-        botonCargarImagen.setBounds(150, 275, 200, 50);
+        botonCargarImagen.setBackground(colorBoton);
+        botonCargarImagen.setForeground(colorBotonTexto);
+        botonCargarImagen.setBounds(100, 125, 200, 50);
         botonCargarImagen.setActionCommand("CARGAR");
+        botonCargarImagen.setFont(new Font("Arial", Font.BOLD, 14));
         panel.add(botonCargarImagen);
     }
 
     private void agregarPanel() {
+        Color colorFondo = new Color(7, 64, 91);
+
         panel = new JPanel();
         panel.setLayout(null);
+        panel.setBackground(colorFondo);
         this.getContentPane().add(panel);
         JLabel subtitulo = new JLabel("Reconocimiento Facial");
         subtitulo.setBounds(10,10,150,20);
