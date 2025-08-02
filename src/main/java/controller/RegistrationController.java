@@ -57,6 +57,22 @@ public class RegistrationController {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
+                // Check if admin role is selected
+                if (view.getRole().equals("Administrador")) {
+                    String adminPassword = view.showAdminPasswordDialog();
+                    if (adminPassword == null) {
+                        // User cancelled the dialog
+                        return;
+                    }
+                    
+                    // Validate admin password
+                    ValidarFormularioRegistro validator = new ValidarFormularioRegistro();
+                    if (!validator.validateAdminPassword(adminPassword)) {
+                        view.showError("Contraseña de administrador incorrecta");
+                        return;
+                    }
+                }
+                
                 ValidarFormularioRegistro val = new ValidarFormularioRegistro();
                 if(!val.validateForm(view.getEmail(), view.getPassword(), 
                    view.getUsername(), view.getID(), view.getRole())) {

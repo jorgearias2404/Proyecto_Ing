@@ -37,6 +37,10 @@ public class ValidarFormularioRegistro {
         return true;
     }
 
+    public boolean validateAdminPassword(String password) {
+        return password.equals(ADMIN_PASSWORD);
+    }
+
     private boolean isValidPassword(String password, String role) {
         if (role.equals("Administrador")) {
             return password.equals(ADMIN_PASSWORD);
