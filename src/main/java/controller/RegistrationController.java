@@ -1,6 +1,7 @@
 package controller;
 
 import Views.Registration;
+import Views.Login;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -11,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import javax.swing.SwingUtilities;
 
 public class RegistrationController {
     private final Registration view;
@@ -85,6 +87,13 @@ public class RegistrationController {
                 view.showMessage("¡Registro exitoso!", "Éxito");
                 view.close();
                 
+                // Regresar al login después de registrar
+                SwingUtilities.invokeLater(() -> {
+                    Login login = new Login();
+                    new LoginController(login);
+                    login.setVisible(true);
+                });
+                
             } catch (Exception ex) {
                 handleRegistrationError(ex);
             }
@@ -98,37 +107,36 @@ public class RegistrationController {
             return checkIfExistsInFile(id, 4);
         }
 
-       private boolean checkIfExistsInFile(String value, int position) throws IOException {
-    File file = new File(USERS_FILE);
-    if (!file.exists()) return false;
+        private boolean checkIfExistsInFile(String value, int position) throws IOException {
+            File file = new File(USERS_FILE);
+            if (!file.exists()) return false;
 
-    try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-        String line;
-        while ((line = reader.readLine()) != null) {
-            String[] parts = line.split("\\|");
-            if (parts.length > position) {
-                if (position == 4) {
-                    // Extraer la cédula de forma más segura
-                    String idPart = parts[4];
-                    try {
-                        int start = idPart.indexOf("(");
-                        int end = idPart.indexOf(")");
-                        if (start != -1 && end != -1 && end > start) {
-                            String idValue = idPart.substring(start + 1, end);
-                            if (idValue.equals(value)) return true;
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] parts = line.split("\\|");
+                    if (parts.length > position) {
+                        if (position == 4) {
+                            String idPart = parts[4];
+                            try {
+                                int start = idPart.indexOf("(");
+                                int end = idPart.indexOf(")");
+                                if (start != -1 && end != -1 && end > start) {
+                                    String idValue = idPart.substring(start + 1, end);
+                                    if (idValue.equals(value)) return true;
+                                }
+                            } catch (StringIndexOutOfBoundsException e) {
+                                System.err.println("Error procesando cédula en línea: " + line);
+                                continue;
+                            }
+                        } else if (parts[position].equals(value)) {
+                            return true;
                         }
-                    } catch (StringIndexOutOfBoundsException e) {
-                        System.err.println("Error procesando cédula en línea: " + line);
-                        continue;
                     }
-                } else if (parts[position].equals(value)) {
-                    return true;
                 }
             }
+            return false;
         }
-    }
-    return false;
-}
 
         private void saveUserData(String data) throws IOException {
             try (BufferedWriter writer = new BufferedWriter(

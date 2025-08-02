@@ -32,7 +32,6 @@ public class LoginController {
             return;
         }
 
-        // Verificar si es intento de login como admin
         boolean isAdmin = username.startsWith("admin_");
         if (isAdmin) {
             String secretKey = JOptionPane.showInputDialog(loginView, 
