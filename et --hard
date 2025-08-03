@@ -1,0 +1,549 @@
+[33mcommit c9e4653b4f1647a659f9e89baa6dcf71fe12f3cd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Merge: 50fd110 c0215ff
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sun Aug 3 18:50:36 2025 -0400
+
+    Ajustando comportamiento del admin
+
+[33mcommit 50fd1104d037df26b8dd0864f2d361a67af30a9e[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sun Aug 3 18:49:32 2025 -0400
+
+    Ajustando comportamiento del admin
+
+[33mcommit c0215ff51358b1b439b16100dc26efad7fffcbc7[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Sun Aug 3 18:44:46 2025 -0400
+
+    arreglos en el monedero
+
+[33mcommit 1388f44cf8b3dc0cf9c6846b6a9a627fe668cc62[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Sun Aug 3 18:09:04 2025 -0400
+
+    arreglos en el menu
+
+[33mcommit 658bf9fa819e3a4ee137edd6b27a039162630313[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Sun Aug 3 17:45:18 2025 -0400
+
+    mejoras en el historial del monedero
+
+[33mcommit 55d6ecdee501e6eb08725f90e23147736c51f646[m
+Merge: a1a042b cec8ac0
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Sun Aug 3 17:27:21 2025 -0400
+
+    arreglo del historial del monedero
+
+[33mcommit a1a042b8cb38a1ce031a8743a1a5685ea2c60be1[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Sun Aug 3 17:26:46 2025 -0400
+
+    arreglo del historial del monedero
+
+[33mcommit cec8ac00b09b26b21117eca1ab5e488fb0524c5a[m
+Merge: b78542a b901269
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sun Aug 3 16:49:52 2025 -0400
+
+    Merge branch 'main' of https://github.com/jorgearias2404/Proyecto_Ing
+
+[33mcommit b78542a8bd4f80751f4734faeb5db7f30c54c42a[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sun Aug 3 16:49:26 2025 -0400
+
+    Arreglos
+
+[33mcommit b901269bdeb618da6e9c08405f71ebe4c52eaf46[m
+Merge: 1d95f2c c8e361d
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Sun Aug 3 16:45:39 2025 -0400
+
+    arreglos
+
+[33mcommit 1d95f2c274624eca19743216115e26a22051e425[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Sun Aug 3 16:42:07 2025 -0400
+
+    arreglos
+
+[33mcommit c8e361dbafe406d84d5d60c7aa1738f90ade50da[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sun Aug 3 14:07:54 2025 -0400
+
+    Implementado dualidad de navegaciones
+
+[33mcommit d6aebea47d370fa5bb2408c166cf577bebe6ee9b[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sun Aug 3 14:00:16 2025 -0400
+
+    Ajustes en el sistema de administrador
+
+[33mcommit c75a23bb832cd3c89c7d1fb89787d569770f5330[m
+Merge: 2b5e12e ea57945
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sun Aug 3 13:27:36 2025 -0400
+
+    Merge branch 'main' of github.com:jorgearias2404/Proyecto_Ing
+    
+    merge nuevoi
+
+[33mcommit 2b5e12e49dcb66c1d05ba4e6c7ccba00920c4498[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sun Aug 3 13:27:26 2025 -0400
+
+    Implementaciones de registro de administrador
+
+[33mcommit ea579459e44952503eebaef4bd237c84684c8b9b[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sun Aug 3 12:41:44 2025 -0400
+
+    Arreglo de bugs - Reconocimiento facial
+
+[33mcommit 527ad8b1ae131607e91f7f565b711b6f1da9849a[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sun Aug 3 12:30:19 2025 -0400
+
+    Listo reconocimiento facial y cobro de tarifas, falta que se muestre en el historial
+
+[33mcommit 4b00bdc64c674ad7eae43a22a010af12aae4d5ee[m
+Merge: b8731d8 de43c76
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sun Aug 3 11:51:02 2025 -0400
+
+    Merge remote-tracking branch 'origin/main' into Reconocimiento-facial
+
+[33mcommit b8731d8283640c17921159015ef81c6834f88147[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sun Aug 3 11:46:29 2025 -0400
+
+    Aplica descuento
+
+[33mcommit d307ebfeaa8b2bd4865f1b497acb41e08cc992af[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sun Aug 3 11:35:11 2025 -0400
+
+    Reconocimiento facial carga ccb y cobra- falta actualizar bien el monedero
+
+[33mcommit de43c763abf170dc142995ce649bdf26cc908ae8[m
+Merge: 745c985 2fcf975
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sun Aug 3 11:28:24 2025 -0400
+
+    Merge branch 'main' of github.com:jorgearias2404/Proyecto_Ing
+    
+    Merge de Jorge
+
+[33mcommit 745c985ef3c35cd3439a6d3d8445a3f08fdeff7f[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sun Aug 3 11:28:15 2025 -0400
+
+    Ajustes de validacion no repetidos requiere chequeo
+
+[33mcommit c5c153d60accbec160b30a0995ae021d078812b2[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sat Aug 2 23:58:46 2025 -0400
+
+     Reconocimiento facial hace el cobro- falta buscar el CCB del periodo
+
+[33mcommit e79ae59293dadcac60bd143ea141638e99a8a0e2[m
+Merge: 8d0edf1 2fcf975
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sat Aug 2 16:09:24 2025 -0400
+
+    Merge remote-tracking branch 'origin/main' into Reconocimiento-facial
+
+[33mcommit 8d0edf18c2a07db8d6592262a29fe9bf2ab88457[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sat Aug 2 13:54:28 2025 -0400
+
+    Reconocimiento facial carga saldo de usuario
+
+[33mcommit 2fcf9752eaba08c5b10769ca90a81d0889b0e3c8[m
+Author: Mauricio Marquina <mauriciomarquina00@gmail.com>
+Date:   Sat Aug 2 13:19:17 2025 -0400
+
+    Carga de CCB en un .txt dentro del Database
+
+[33mcommit 87e9727524806713b1fec9e251e66aab9129ea08[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Fri Aug 1 21:54:28 2025 -0400
+
+    Cosas de pinga
+
+[33mcommit f3a20fcd4594cc2450e0d96a3073a138375c9823[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Fri Aug 1 21:43:15 2025 -0400
+
+    Cmabios en login
+
+[33mcommit 0d88743824102f75cb24294ffb4c500762b7ac04[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Fri Aug 1 21:27:33 2025 -0400
+
+    Cambios en login registro y admin menu controller mejorado
+
+[33mcommit 27b5c9d7fb7fb738fa08d78b67cedd506e28271c[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Fri Aug 1 21:09:44 2025 -0400
+
+    Cambios en login registro y admin menu controller
+
+[33mcommit 52ff70f106736f47e601d7e64e9b59bc151f5938[m
+Merge: 383f1b0 7dc5eb3
+Author: Mauricio Marquina <mauriciomarquina00@gmail.com>
+Date:   Fri Aug 1 16:05:20 2025 -0400
+
+    .
+
+[33mcommit 7dc5eb3dcc91eb7a454267dfa66d75402d30001a[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Fri Aug 1 04:40:36 2025 -0400
+
+    actualizacion de menus por el administrador
+
+[33mcommit 5f3aa0891df858f2ade0a90e21e7214f2d5253aa[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Fri Aug 1 04:38:45 2025 -0400
+
+    actualizacion de menus por el administrador
+
+[33mcommit 773f86b9f0e783159671be0ff7562ee47f44966d[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Thu Jul 31 22:15:50 2025 -0400
+
+    arreglos
+
+[33mcommit f39fce4d6332261ce8cd43e938ccb5bd943bf70a[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Thu Jul 31 20:54:06 2025 -0400
+
+    Reconocimiento facial funcional - cambios por hacer
+
+[33mcommit d28fe50631cc29222fbba467235e15ccc170d225[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Thu Jul 31 18:39:52 2025 -0400
+
+    Añadidas clases base para reconocimiento facial
+
+[33mcommit b46e8104c9a8cf3317cfe97176acdf7603983021[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Fri Jul 18 01:34:24 2025 -0400
+
+    Pruebas CCB y refactorizacion CCB
+
+[33mcommit 93c6b4140f4fec64537b6638ce25c83f15de18cf[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Thu Jul 17 22:28:56 2025 -0400
+
+    Refactorizacion post pruebas
+
+[33mcommit e1198ca8b51d9e6e5399f6ed40958b370bb45f78[m
+Merge: c0f8b87 f8504f2
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Thu Jul 17 22:09:21 2025 -0400
+
+    Merge branch 'main' of https://github.com/jorgearias2404/Proyecto_Ing into Pruebas
+
+[33mcommit c0f8b87097702fb0be5e5330101292c21a80213d[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Thu Jul 17 21:57:10 2025 -0400
+
+    Pruebas Login
+
+[33mcommit f8504f2cd9f9e2d9eb38d7a97126f3d3cfdb9716[m
+Merge: 3a3b515 a58ac79
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Thu Jul 17 21:37:27 2025 -0400
+
+    Merge branch 'main' of github.com:jorgearias2404/Proyecto_Ing
+    
+    Cambios en mergeingii
+
+[33mcommit 3a3b515002edb35fc92115c4413dcdb95395e477[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Thu Jul 17 21:37:10 2025 -0400
+
+    YA LO MATE AL BENDITO REGISTRO
+
+[33mcommit 69c63a86beb5fd3af5d6c6704cb4ee781f6ed2cd[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Thu Jul 17 20:42:38 2025 -0400
+
+    Pruebas exitosas - Refactorizacion de codigo
+
+[33mcommit a58ac791272ddf99bc63ec70d0b0ac0aca1b1b78[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Thu Jul 17 20:12:11 2025 -0400
+
+    arreglos
+
+[33mcommit 334a2b672be211d68d62fa6e3b3db4b61732c90d[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Thu Jul 17 20:05:36 2025 -0400
+
+    arreglo en la calculadora, para que salga en las opciones
+
+[33mcommit b2c3376460122e8211c0600d515b47f5a4efb602[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Thu Jul 17 19:09:47 2025 -0400
+
+    Añadido directorio de pruebas
+
+[33mcommit 383f1b028c02347d6089c085a4557804ef2dab12[m
+Merge: af0c334 76d2858
+Author: Mauricio Marquina <mauriciomarquina00@gmail.com>
+Date:   Thu Jul 17 18:51:47 2025 -0400
+
+    Merge branch 'main' of https://github.com/jorgearias2404/Proyecto_Ing
+
+[33mcommit 76d2858e737646ab71288bcca8d68339abbef2ae[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Thu Jul 17 16:29:26 2025 -0400
+
+    correciones navegacion entre ventanas
+
+[33mcommit 202cc8717c99f9a173631821d11c745970362972[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Thu Jul 17 16:27:47 2025 -0400
+
+    correciones navegacion entre ventanas
+
+[33mcommit 6030b85830adc88fcc9b57c21628d1650695a1a6[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Thu Jul 17 13:47:52 2025 -0400
+
+    Correciones
+
+[33mcommit 2d7459ae34d4aaebd2cf432e1c557723aca7bf2d[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Thu Jul 17 12:42:12 2025 -0400
+
+    Controladores
+
+[33mcommit 5df55c7186ba8965473cec2604f245a567e92083[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Thu Jul 17 12:22:05 2025 -0400
+
+    Estoy reventado
+
+[33mcommit d3d009be49fb4269cf2635a97d7643a99c28fd7d[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Thu Jul 17 10:16:37 2025 -0400
+
+    IMPLEMENTADO EL REGISTRO
+
+[33mcommit cbb86f84a4c5b366240374650ba4f3f512103099[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Thu Jul 17 10:14:55 2025 -0400
+
+    IMPLEMENTADO EL REGISTRO
+
+[33mcommit c12c3517bfd3303f5eed0e70ee195010c90073f2[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Thu Jul 17 09:41:41 2025 -0400
+
+    Login finalizado
+
+[33mcommit 46112d9aadaf3f71291a55ad40a78841431ba875[m
+Merge: 555a85c 25a4944
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Wed Jul 16 23:28:04 2025 -0400
+
+    arreglo de selecciones txt
+
+[33mcommit af0c334573698290c0f0accc56261963444e4e4b[m
+Author: Mauricio Marquina <mauriciomarquina00@gmail.com>
+Date:   Wed Jul 16 21:40:38 2025 -0400
+
+    Termine por completo la calculadora de CCB
+
+[33mcommit 25a494420f7730919686b66375eb3c2889c31fc9[m
+Author: Mauricio Marquina <mauriciomarquina00@gmail.com>
+Date:   Wed Jul 16 20:57:41 2025 -0400
+
+    Agregue la calculadora de CCB
+
+[33mcommit 555a85c617275c6f9168b720c776cb96e71d4126[m
+Merge: 3b693c9 2a66a18
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Wed Jul 16 20:56:38 2025 -0400
+
+    Merge branch 'main' of https://github.com/jorgearias2404/Proyecto_Ing
+
+[33mcommit 3b693c9eca0894bebc61519e1ddc29d1e7cb5e39[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Wed Jul 16 20:55:34 2025 -0400
+
+    si
+
+[33mcommit 2a66a187862f3d513b61ed2ce9a02f0cdb7524b5[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Wed Jul 16 20:48:38 2025 -0400
+
+    Nuevos ajustes
+
+[33mcommit 9700a293f120bec753e01d3bb9abc402fe75edaa[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Wed Jul 16 20:07:12 2025 -0400
+
+    Ajustes en monedero
+
+[33mcommit 4cd7c6608a2949b13cc22caa82909dbf0a928834[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Wed Jul 16 19:55:16 2025 -0400
+
+    Modificaciones de controlador
+
+[33mcommit 4bc6a5f8e289ef79b435d91e9dce5e3f0bc79909[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Wed Jul 16 16:25:49 2025 -0400
+
+    pequeño cambio en monedero
+
+[33mcommit 2cb0f93ed8cf90249b5ebf9d410063935387efdf[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 22:30:53 2025 -0400
+
+    boton de regresar desde el monedero a la venta anterior, tambien se agrego el diseño de la base de datos del monedero .txt
+
+[33mcommit 6b221e6b0cc4dfbe5fe211446f18a2a8907082e2[m
+Merge: ba23f66 c145054
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 13:38:58 2025 -0400
+
+    navegacion entre menu y el usuario
+
+[33mcommit ba23f669154665d3bb6ed8e14a003a32cc5820e4[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 13:37:40 2025 -0400
+
+    navegacion entre menu- usuario
+
+[33mcommit ea58bc57b324692cba38c92d998f6cab5f00ef65[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 13:35:53 2025 -0400
+
+    navegacion entre menu y usuario
+
+[33mcommit c1450547084d1a02deb75287aa9e18c61b381745[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Tue Jul 15 13:33:19 2025 -0400
+
+    ajustes nuevos
+
+[33mcommit 66efb32ebf15996f7992550df07ff1541489d827[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Tue Jul 15 13:32:24 2025 -0400
+
+    ajustes nuevos
+
+[33mcommit 523d01eb308c4a5136ed60b435fab114987751ec[m
+Merge: 7de715d b269477
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Tue Jul 15 13:20:49 2025 -0400
+
+    Merge branch 'main' of github.com:jorgearias2404/Proyecto_Ing
+    
+    NUEVOS AJUSTEiS
+
+[33mcommit 7de715dbb6048c9866d9edb6086369e1ebe85b76[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Tue Jul 15 13:20:40 2025 -0400
+
+    AJUSTES
+
+[33mcommit b2694778cdb947d9d84c140f7e3fda28baeddf34[m
+Merge: 5e43dfd e32dc35
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 13:09:34 2025 -0400
+
+    boton atras menu
+
+[33mcommit 5e43dfd4011eef45f44aa8fb2ec9eed5cbc2d33d[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 13:07:28 2025 -0400
+
+    boton atras menu
+
+[33mcommit e32dc358b158addb26488b2cf6998a5a716dcec8[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Tue Jul 15 13:02:34 2025 -0400
+
+    Navegacion de Monederoe
+
+[33mcommit e33df80211e9ae260c523d7dbc37876bf1144bff[m
+Merge: e569951 61e431e
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 12:45:43 2025 -0400
+
+    cambio en menu
+
+[33mcommit e5699515aeccbef87ce5163ad49335fe4abd0582[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 12:42:07 2025 -0400
+
+    cambio en menu
+
+[33mcommit 61e431e93d50628f72d32a8e9d3c3d8b1ce1af8f[m
+Merge: fdbd1d1 143bdc2
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Tue Jul 15 12:37:57 2025 -0400
+
+    Merge branch 'main' of github.com:jorgearias2404/Proyecto_Ing
+    Merge cambios del repositorio
+
+[33mcommit fdbd1d1b8045365967619e8d3a33344d45555a5e[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Tue Jul 15 12:37:46 2025 -0400
+
+    IMPLEMENTACION DE NAVEGACION
+
+[33mcommit 143bdc2a918aadcf0bdc76ca81c91023d914c3b4[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 12:31:50 2025 -0400
+
+    cambiando .txt de comidas
+
+[33mcommit 3830b70b6397e09ad2038f1044bbd8484787d073[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Tue Jul 15 12:22:36 2025 -0400
+
+    CAMBIOS
+
+[33mcommit c093de03d99f6315fce2b1fad94c1580f591aa10[m
+Author: Gabriel <jgabrielherrera22@gmail.com>
+Date:   Tue Jul 15 12:07:34 2025 -0400
+
+    agregando menu y monedero
+
+[33mcommit d94cf4abe74b2291a86c6007c4cdbcc7e3d9ebf6[m
+Author: Sergio Gomez <sergioferg.2003@gmail.com>
+Date:   Sun Jul 13 19:10:41 2025 -0400
+
+    Agregada interfaz de Registro de usuario
+
+[33mcommit f493e74e843a0a45e85382e934a1a746aa0c9902[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sat Jul 12 20:45:10 2025 -0400
+
+    Nuevos cambios
+
+[33mcommit ba78dbe67ffa48b309bf1abbdba3eb788efaa2de[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sat Jul 12 18:27:47 2025 -0400
+
+    Correcciones
+
+[33mcommit 2bdceeb3510584e823a699646cbc905206869ee3[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sat Jul 12 18:24:38 2025 -0400
+
+    Implementacion del login
+
+[33mcommit 754225224cdbead7d95b5d759e551d3333839c9f[m
+Author: Jorge Arias <ja549655@gmail.com>
+Date:   Sat Jul 12 18:08:21 2025 -0400
+
+    Correcciones
