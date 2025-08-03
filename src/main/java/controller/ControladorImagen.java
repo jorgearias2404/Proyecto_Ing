@@ -2,11 +2,8 @@ package controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-
+import Services.MonederoData;
 import Services.ComparadorImagen;
 import Services.ReadDatabase;
 import Views.VistaImagen;
@@ -17,6 +14,7 @@ public class ControladorImagen implements ActionListener {
     ReadDatabase lector;
     ComparadorImagen comparador;
     String usuarioEncontrado;
+    MonederoData monedero;
 
     public ControladorImagen() {
         ventanaImagen = new VistaImagen();
@@ -39,7 +37,13 @@ public class ControladorImagen implements ActionListener {
                     System.out.println("Ruta seleccionada: " + filePath);
                     if(hacerComparacion(filePath)) {
                         System.err.println("usuario " + usuarioEncontrado + " reconocido");
-                        System.err.println("saldo: " + cargarSaldo());
+                        monedero = new MonederoData(this.usuarioEncontrado);
+                        double saldo = monedero.getSaldo();
+                        System.err.println("saldo: " + saldo);
+                        //TODO: cobrar CCB
+                        double ccb = 1;
+                        saldo -= ccb;
+                        monedero.actualizarSaldo(saldo);
                     } else {
                         ventanaImagen.showError("Usuario NO Reconocido");
                     }
@@ -67,24 +71,7 @@ public class ControladorImagen implements ActionListener {
         return false;
     }
 
-    public double cargarSaldo() {
-        String nombreArchivo = "DataBase/monedero_" + this.usuarioEncontrado + ".txt";
-        new File("DataBase").mkdirs();
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] partes = linea.split(",", 6);
-                if (partes.length == 6) {
-                    return Double.parseDouble(partes[4]);
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Error al cargar datos: " + e.getMessage());
-        }
-
-        return 0.00;
-    }
+    
 
     public static void main(String args[]) {
         ControladorImagen c = new ControladorImagen();

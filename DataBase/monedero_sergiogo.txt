@@ -1,0 +1,3 @@
+sergiogo,Estudiante,04129937071,Banco Nacional,399.0,[02/08/25 14:11] Recarga: $400.00 - Banco: Banco Nacional
+\n[02/08/25 15:11] Visita al comedor: -1$
+\n

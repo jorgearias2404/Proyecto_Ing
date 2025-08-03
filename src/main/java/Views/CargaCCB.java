@@ -150,12 +150,12 @@ public class CargaCCB extends JFrame {
 
             // Escribe los datos en el archivo
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
-                writer.write("=== DATOS DEL FORMULARIO ===\n");
+                writer.write("= DATOS DEL FORMULARIO =\n");
                 writer.write("Costos Fijos: " + costosFijos + "\n");
                 writer.write("Costos Variables: " + costosVariables + "\n");
                 writer.write("Bandejas: " + bandejas + "\n");
                 writer.write("Merma (%): " + merma + "\n");
-                writer.write("\n=== RESULTADO CCB ===\n" + ccb + "\n");
+                writer.write("\n= RESULTADO CCB =\n" + ccb + "\n");
             }
 
             // Muestra confirmación 
