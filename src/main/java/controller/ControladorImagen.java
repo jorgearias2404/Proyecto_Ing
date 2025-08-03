@@ -51,6 +51,7 @@ public class ControladorImagen implements ActionListener {
                             double saldo = monedero.getSaldo();
                             System.err.println("saldo: " + saldo);
                             double ccb = CalculadoraCCB.getCCB();
+                            ccb -= (ccb * getDiscount());
                             if(saldo - ccb >= 0) {
                                 saldo -= ccb;
                                 monedero.actualizarSaldo(saldo, ccb);
@@ -89,6 +90,16 @@ public class ControladorImagen implements ActionListener {
            
         }
         return false;
+    }
+
+    private double getDiscount() {
+        if(this.tipoUsuario == "Estudiante") {
+            return 0.25;
+        } else if(this.tipoUsuario == "Empleado") {
+            return 0.5;
+        } else {
+            return 0.4;
+        }
     }
 
     public static void main(String args[]) {
