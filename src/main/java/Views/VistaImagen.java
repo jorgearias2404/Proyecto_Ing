@@ -9,7 +9,7 @@ public class VistaImagen extends JFrame {
     JButton botonCargarImagen;
 
     public VistaImagen() {
-        setSize(400, 250);
+        setSize(300, 150);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
         setTitle("Reconocimiento Facial COMEST");
@@ -54,7 +54,7 @@ public class VistaImagen extends JFrame {
         botonCargarImagen = new JButton("Tomar Imagen");
         botonCargarImagen.setBackground(colorBoton);
         botonCargarImagen.setForeground(colorBotonTexto);
-        botonCargarImagen.setBounds(100, 125, 200, 50);
+        botonCargarImagen.setBounds(50, 25, 200, 50);
         botonCargarImagen.setActionCommand("CARGAR");
         botonCargarImagen.setFont(new Font("Arial", Font.BOLD, 14));
         panel.add(botonCargarImagen);
@@ -67,11 +67,11 @@ public class VistaImagen extends JFrame {
         panel.setLayout(null);
         panel.setBackground(colorFondo);
         this.getContentPane().add(panel);
-        JLabel subtitulo = new JLabel("Reconocimiento Facial");
+        /*JLabel subtitulo = new JLabel("Reconocimiento Facial");
         subtitulo.setBounds(10,10,150,20);
         subtitulo.setHorizontalAlignment(SwingConstants.LEFT);
         subtitulo.setForeground(Color.BLACK);
-        panel.add(subtitulo);
+        panel.add(subtitulo);*/
         
     }
 

@@ -1,3 +1,5 @@
-sergiogo,Estudiante,04129937071,Banco Nacional,200.0,[03/08/25 11:15] Recarga: $100.00 - Banco: Banco Nacional
-\n[03/08/25 11:16] Recarga: $100.00 - Banco: Banco Nacional
+sergiogo,Estudiante,04129937071,Banco Provincial,1.22,[03/08/25 12:27] Recarga: $10.00 - Banco: Banco Provincial  #
+\n [03/08/25 12:27] Recarga: $13.00 - Banco: Banco Provincial  #
+\n [03/08/2025 12:33] Visita al comedor: $-7.26  #
+\n [03/08/2025 12:40] Visita al comedor: $-7.26  #
 \n
