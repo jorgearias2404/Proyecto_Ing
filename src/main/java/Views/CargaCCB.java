@@ -4,16 +4,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.awt.Color;  
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import javax.swing.JOptionPane;
 
 public class CargaCCB extends JFrame {
 
@@ -146,7 +144,7 @@ public class CargaCCB extends JFrame {
             Files.createDirectories(Paths.get(rutaBase));
 
             // Genera nombre del archivo con fecha/hora
-            String nombreArchivo = rutaBase + "/formulario_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".txt";
+            String nombreArchivo = rutaBase + "/formulario_" + getWeekRange() + ".txt";
 
             // Escribe los datos en el archivo
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
@@ -164,6 +162,24 @@ public class CargaCCB extends JFrame {
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error al guardar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    public static String getWeekRange() {
+        // Fecha actual (puedes cambiarla por cualquier fecha)
+        LocalDate hoy = LocalDate.now();
+        
+        // Calcular el domingo (primer día de la semana)
+        LocalDate domingo = hoy.with(DayOfWeek.SUNDAY);
+        
+        // Calcular el sábado (último día de la semana)
+        LocalDate sabado = domingo.plusDays(6);
+        
+        // Formatear resultados (dd/MM/yyyy)
+        DateTimeFormatter formateador = DateTimeFormatter.ofPattern("ddMMyyyy");
+        String domingoStr = domingo.format(formateador);
+        String sabadoStr = sabado.format(formateador);
+        
+        return domingoStr + "_" + sabadoStr;
     }
 
     public static void main(String[] args) {

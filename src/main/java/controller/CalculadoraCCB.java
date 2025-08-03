@@ -1,5 +1,11 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+import Views.CargaCCB;
+
 public class CalculadoraCCB {
     public static double calcularCCB(String costosFijosText, String costosVariablesText, String bandejasText, String mermaText) {
 
@@ -17,5 +23,22 @@ public class CalculadoraCCB {
         }
 
         return ((costosFijos + costosVariables) / bandejas) * (1 + merma);
+    }
+
+    public static double getCCB() {
+        String nombreArchivo = "Database/formulario_" + CargaCCB.getWeekRange() + ".txt";
+        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea;
+            String[] contenido = {};
+            while ((linea = br.readLine()) != null) {
+                contenido = linea.split(",");
+            }
+            for(String i : contenido) {
+                return Double.parseDouble(i);
+            }
+        } catch (IOException e) {
+            System.err.println("Error al cargar datos: " + e.getMessage());
+        }
+        return 0.00;
     }
 }

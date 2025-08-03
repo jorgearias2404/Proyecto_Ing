@@ -19,14 +19,11 @@ public class MonederoData {
     public double getSaldo() {
         String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
         new File("DataBase").mkdirs();
-        
+
         try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] contenido = linea.split(",", 6);
-                for(String i : contenido) {
-                    System.err.println(i);
-                }
                 if (contenido.length == 6) {
                     return Double.parseDouble(contenido[4]);
                 }
@@ -38,20 +35,33 @@ public class MonederoData {
         return 0.00;
     }
 
-    public void actualizarSaldo(double nuevoSaldo) {
+    public void actualizarSaldo(double nuevoSaldo, double ccb) {
         String[] nuevoContenido = actualizarSaldo_(nuevoSaldo);
-        actualizarArchivo(nuevoContenido);
+        System.err.println(ccb);
+        actualizarArchivo(nuevoContenido, ccb);
     }
 
-    private void actualizarArchivo(String[] contenido) {
+    private void actualizarArchivo(String[] contenido, double ccb) {
         String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
             for(int i = 0; i < contenido.length - 1; i++) {
                 writer.write(contenido[i] + ",");
             }
-            writer.write(contenido[contenido.length-1] + "\\n");
+            String[] recargas = contenido[contenido.length-1].split("\n");
+            for(String i : recargas) {
+                System.err.println(i);
+            }
+            System.err.println(recargas.length);
+            for(int i = 0; i < recargas.length; i++) {
+                writer.write(recargas[i]);
+                writer.newLine();
+                writer.write("\\n");
+            }
+            
             String fecha = "[" + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()) + "]";
-            writer.write(fecha + " Visita al comedor: -" + 1 + "$\\n");
+            writer.write(fecha + " Visita al comedor: $-" + ccb);
+            writer.newLine();
+            writer.write("\\n");
             
         } catch (IOException e) {
             System.err.println("Error al cargar datos: " + e.getMessage());
@@ -64,14 +74,16 @@ public class MonederoData {
         String[] contenido = {};
         try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
             String linea;
+            String cont = "";
             while ((linea = br.readLine()) != null) {
-                contenido = linea.split(",", 6);
-                
-                if (contenido.length == 6) {
-                    contenido[4] = Double.toString(nuevoSaldo);
-                }
-                return contenido;
+                cont += linea; 
             }
+            contenido = cont.split(",", 6);
+            System.err.println(cont);
+            if (contenido.length == 6) {
+                contenido[4] = Double.toString(nuevoSaldo);
+            }
+            return contenido;
         } catch (IOException e) {
             System.err.println("Error al cargar datos: " + e.getMessage());
         }

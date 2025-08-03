@@ -1,0 +1,8 @@
+= DATOS DEL FORMULARIO =
+Costos Fijos: 56
+Costos Variables: 54
+Bandejas: 10
+Merma (%): 10
+
+= RESULTADO CCB =
+12.1
