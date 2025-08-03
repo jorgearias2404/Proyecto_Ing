@@ -4,9 +4,12 @@ import Views.MonederoEstudiantil;
 import Views.Op_Usuario;
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,11 +63,18 @@ public class MonederoController {
         estudiante.saldo += monto;
         saldo = estudiante.saldo;
 
-        String transaccion = String.format("[%s] Recarga: %s - Banco: %s%n",
-        LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")),
-        formato.format(monto),
-        banco
-    );
+        String transaccion = String.format(
+            "%n[Transacción %s]%n" +
+            "Fecha/Hora: %s%n" +
+            "Tipo: Recarga%n" +
+            "Monto: %s%n" +
+            "Banco: %s%n" +
+            "Teléfono asociado: %s%n%n",
+    LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")),
+    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
+    formato.format(monto),
+    banco,
+    telefono);
     
     // Asegurar que siempre empiece con historial limpio
     if (estudiante.historial == null) estudiante.historial = "";
@@ -119,24 +129,38 @@ public class MonederoController {
     String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
     new File("DataBase").mkdirs();
     
-    try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
-        String linea;
-        while ((linea = br.readLine()) != null) {
-            // Manejar líneas vacías o mal formadas
-            if (linea.trim().isEmpty()) continue;
+    try {
+        String content = new String(Files.readAllBytes(Paths.get(nombreArchivo)));
+        String[] sections = content.split("--- HISTORIAL ---");
+        
+        if(sections.length > 1) {
+            // Procesar sección de datos
+            String dataSection = sections[0];
+            Map<String, String> dataMap = new HashMap<>();
+            Arrays.stream(dataSection.split("\n"))
+                .filter(line -> line.contains(":"))
+                .forEach(line -> {
+                    String[] parts = line.split(":", 2);
+                    dataMap.put(parts[0].trim(), parts[1].trim());
+                });
             
-            String[] partes = linea.split(",", 6);
-            if (partes.length == 6) {
-                Estudiante e = new Estudiante(
-                    partes[0], partes[1], partes[2], partes[3],
-                    Double.parseDouble(partes[4]), partes[5]
-                );
-                baseDatos.put(e.cedula, e);
-            }
+            // Procesar historial
+            String historial = sections[1].replace("|TRANSACCION_FINAL|", "\n")
+                                       .replace("-----------------", "")
+                                       .trim();
+            
+            Estudiante e = new Estudiante(
+                dataMap.get("Usuario"),
+                dataMap.get("Nombre"),
+                dataMap.get("Teléfono"),
+                dataMap.get("Banco preferido"),
+                Double.parseDouble(dataMap.get("Saldo actual").replace("$", "")),
+                historial
+            );
+            baseDatos.put(e.cedula, e);
         }
     } catch (IOException e) {
         System.err.println("Error al cargar datos: " + e.getMessage());
-        // Inicializar con datos vacíos si hay error
         baseDatos.put(usuarioActual, new Estudiante(usuarioActual, "Estudiante", "", "", 0.0, ""));
     }
 }
@@ -186,9 +210,18 @@ public class MonederoController {
 
         @Override
         public String toString() {
-              String histParaArchivo = historial.replace("\n", "||n|| ");
-              return String.join(",", cedula, nombre, telefono, banco, 
-                     String.valueOf(saldo), histParaArchivo);
+    // Separar el historial con un delimitador claro
+    String histParaArchivo = historial.replace("\n", " ");
+    return String.format(
+        "Usuario: %s\n" +
+        "Nombre: %s\n" +
+        "Teléfono: %s\n" +
+        "Banco preferido: %s\n" +
+        "Saldo actual: %s\n" +
+        "--- HISTORIAL ---\n%s\n" +
+        "-----------------",
+        cedula, nombre, telefono, banco, 
+        String.valueOf(saldo), histParaArchivo);
     }
   }
 }

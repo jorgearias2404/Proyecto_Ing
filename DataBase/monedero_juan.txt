@@ -1,1 +1,0 @@
-juan,Estudiante,04141716425,Banco Nacional,20.0,[17/07/25 15:19] Recarga: $20.00 - Banco: Banco Nacional\n

@@ -1,1 +1,0 @@
-Jorge,Estudiante,04241714261,Banco Nacional,90.0,[31/07/25 22:17] Recarga: $10.00 - Banco: Banco Nacional[02/08/25 21:09] Recarga: $30.00 - Banco: Banco Provincial[02/08/25 21:11] Recarga: $20.00 - Banco: Banco Nacional\n

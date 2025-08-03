@@ -1,1 +1,8 @@
-sergiogo,Estudiante,,,20.0,[03/08/25 17:20] Recarga: $10.00 - Banco: Banco Nacional[03/08/25 17:21] Recarga: $10.00 - Banco: Banco Provincial||n||
+Usuario: sergiogo
+Nombre: Estudiante
+Teléfono: 
+Banco preferido: 
+Saldo actual: 20.0
+--- HISTORIAL ---
+ [Transacción 03082025174402] Fecha/Hora: 03/08/2025 17:44:02 Tipo: Recarga Monto: $10.00 Banco: Banco Nacional Teléfono asociado: 04241718968   [Transacción 03082025174421] Fecha/Hora: 03/08/2025 17:44:21 Tipo: Recarga Monto: $10.00 Banco: Banco Provincial Teléfono asociado: 04141774545  
+-----------------

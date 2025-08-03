@@ -171,14 +171,22 @@ public class MonederoEstudiantil extends JFrame {
     }
     
     public void mostrarHistorial(String historial) {
-    // Limpiar y mostrar todo el historial
     areaHistorial.setText("");
     if (historial != null && !historial.trim().isEmpty()) {
-        // Reemplazar cualquier # residual
-        areaHistorial.setText(historial.replace("#", ""));
-      }
-   }
-    
+        // Aplicar formato de fuente monoespaciada para mejor alineación
+        areaHistorial.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        
+        // Dividir transacciones y agregar separadores
+        String[] transacciones = historial.split("\\[Transacción");
+        for (String trans : transacciones) {
+            if (!trans.trim().isEmpty()) {
+                areaHistorial.append("[Transacción" + trans + "\n ");
+                areaHistorial.append("--------------------------------\n ");
+            }
+        }
+    }
+}
+
     public void limpiarCampos() {
         campoTelefono.setText("");
         comboBanco.setSelectedIndex(0);
