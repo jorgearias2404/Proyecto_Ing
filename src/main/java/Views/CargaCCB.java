@@ -1,9 +1,19 @@
 package Views;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.Color;  
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.swing.JOptionPane;
 
 public class CargaCCB extends JFrame {
 
@@ -17,7 +27,7 @@ public class CargaCCB extends JFrame {
     }
 
     private void initComponents(){
-        // Configuración de la ventana
+        // Ventana
         setTitle("Calculadora CCB");
         setSize(400, 325);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -29,7 +39,7 @@ public class CargaCCB extends JFrame {
         getContentPane().setBackground(COLOR_FONDO);
 
 
-        // Componentes del formulario
+        // Formulario
         JLabel lblCostosFijos = new JLabel("Costos Fijos:");
         lblCostosFijos.setBounds(30, 30, 120, 20);
         add(lblCostosFijos);
@@ -70,13 +80,12 @@ public class CargaCCB extends JFrame {
         add(txtMerma);
         txtMerma.setBackground(COLOR_ETIQUETAS);
 
-        // Botón de cálculo
+        // Boton
         JButton btnCalcular = new JButton("Calcular CCB");
         btnCalcular.setBounds(120, 190, 150, 30);
         add(btnCalcular);
         btnCalcular.setBackground(COLOR_BOTON);
         btnCalcular.setForeground(COLOR_FONDO);
-
         // Boton regresar para volver a Op_Usuario
         JButton btnRegresar = new JButton("Regresar");
         btnRegresar.setBounds(120, 230, 150, 30);
@@ -86,10 +95,9 @@ public class CargaCCB extends JFrame {
 
         // Etiqueta para mostrar el resultado
         lblResultado = new JLabel("CCB: ");
-        lblResultado.setBounds(30, 230, 300, 30);
+        lblResultado.setBounds(30, 250, 300, 30);
         add(lblResultado);
         lblResultado.setForeground(COLOR_TEXTO);
-
         // Evento del boton regresar
         btnRegresar.addActionListener(e -> {
             this.dispose(); 
@@ -100,19 +108,62 @@ public class CargaCCB extends JFrame {
         btnCalcular.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double ccb = controller.CalculadoraCCB.calcularCCB(txtCostosFijos.getText(), txtCostosVariables.getText(), txtBandejas.getText(), txtMerma.getText());
-                if(ccb == 0) {
-                    lblResultado.setText("Numero invalido");
-                    return;
+                try {
+                    // Obtener valores del formulario
+                    String costosFijos = txtCostosFijos.getText();
+                    String costosVariables = txtCostosVariables.getText();
+                    String bandejas = txtBandejas.getText();
+                    String merma = txtMerma.getText();
+
+                    // Calcular CCB
+                    double ccb = controller.CalculadoraCCB.calcularCCB(costosFijos, costosVariables, bandejas, merma);
+                
+                    if (ccb == 0) {
+                        lblResultado.setText("Número inválido");
+                        return;
+                    }
+
+                    // Formatear resultado
+                    DecimalFormat df = new DecimalFormat("#.##");
+                    String ccbFormateado = df.format(ccb);
+                    lblResultado.setText("CCB: " + ccbFormateado);
+
+                    // guardar archivo
+                    guardarEnArchivo(costosFijos, costosVariables, bandejas, merma, ccbFormateado);
+
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
-
-
-                // Formatear el resultado a 2 decimales
-                DecimalFormat df = new DecimalFormat("#.##");
-                lblResultado.setText("CCB: " + df.format(ccb));
-
             }
         });
+    }
+
+    private void guardarEnArchivo(String costosFijos, String costosVariables, String bandejas, String merma, String ccb) {
+        try {
+
+            String rutaBase = "Database";
+            // Crea la carpeta "Database" si no existe
+            Files.createDirectories(Paths.get(rutaBase));
+
+            // Genera nombre del archivo con fecha/hora
+            String nombreArchivo = rutaBase + "/formulario_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".txt";
+
+            // Escribe los datos en el archivo
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
+                writer.write("=== DATOS DEL FORMULARIO ===\n");
+                writer.write("Costos Fijos: " + costosFijos + "\n");
+                writer.write("Costos Variables: " + costosVariables + "\n");
+                writer.write("Bandejas: " + bandejas + "\n");
+                writer.write("Merma (%): " + merma + "\n");
+                writer.write("\n=== RESULTADO CCB ===\n" + ccb + "\n");
+            }
+
+            // Muestra confirmación 
+            JOptionPane.showMessageDialog(null, "Archivo guardado en: " + nombreArchivo, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al guardar: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public static void main(String[] args) {

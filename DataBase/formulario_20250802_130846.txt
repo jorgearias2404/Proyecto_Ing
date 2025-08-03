@@ -1,0 +1,8 @@
+=== DATOS DEL FORMULARIO ===
+Costos Fijos: 100
+Costos Variables: 100
+Bandejas: 100
+Merma (%): 12
+
+=== RESULTADO CCB ===
+2.24
