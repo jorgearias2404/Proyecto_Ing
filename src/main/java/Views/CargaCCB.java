@@ -1,4 +1,9 @@
 package Views;
+
+import java.awt.Color;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,25 +12,20 @@ import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.awt.Color;  
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 
 public class CargaCCB extends JFrame {
-
     private JTextField txtCostosFijos, txtCostosVariables, txtBandejas, txtMerma;
     private JLabel lblResultado;
-    private Op_Usuario opUsuario; // Referencia a la ventana de opciones de usuario
+    private Op_Admin opAdmin; // Referencia a la ventana de administrador
 
-    public CargaCCB(Op_Usuario opUsuario) {
-        this.opUsuario = opUsuario;
+    public CargaCCB(Op_Admin opAdmin) {
+        this.opAdmin = opAdmin;
         initComponents();
     }
 
-    private void initComponents(){
-        // Ventana
+    private void initComponents() {
+        // Configuración de la ventana
         setTitle("Calculadora CCB");
         setSize(400, 325);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -36,84 +36,81 @@ public class CargaCCB extends JFrame {
         Color COLOR_ETIQUETAS = new Color(180, 220, 240);
         getContentPane().setBackground(COLOR_FONDO);
 
-
-        // Formulario
+        // Componentes del formulario
         JLabel lblCostosFijos = new JLabel("Costos Fijos:");
         lblCostosFijos.setBounds(30, 30, 120, 20);
-        add(lblCostosFijos);
         lblCostosFijos.setForeground(COLOR_TEXTO);
+        add(lblCostosFijos);
 
         txtCostosFijos = new JTextField();
         txtCostosFijos.setBounds(160, 30, 200, 25);
-        add(txtCostosFijos);
         txtCostosFijos.setBackground(COLOR_ETIQUETAS);
+        add(txtCostosFijos);
 
         JLabel lblCostosVariables = new JLabel("Costos Variables:");
         lblCostosVariables.setBounds(30, 70, 120, 20);
-        add(lblCostosVariables);
         lblCostosVariables.setForeground(COLOR_TEXTO);
+        add(lblCostosVariables);
 
         txtCostosVariables = new JTextField();
         txtCostosVariables.setBounds(160, 70, 200, 25);
-        add(txtCostosVariables);
         txtCostosVariables.setBackground(COLOR_ETIQUETAS);
+        add(txtCostosVariables);
 
         JLabel lblBandejas = new JLabel("Número Bandejas:");
         lblBandejas.setBounds(30, 110, 120, 20);
-        add(lblBandejas);
         lblBandejas.setForeground(COLOR_TEXTO);
+        add(lblBandejas);
 
         txtBandejas = new JTextField();
         txtBandejas.setBounds(160, 110, 200, 25);
-        add(txtBandejas);
         txtBandejas.setBackground(COLOR_ETIQUETAS);
+        add(txtBandejas);
 
         JLabel lblMerma = new JLabel("Merma (%):");
         lblMerma.setBounds(30, 150, 120, 20);
-        add(lblMerma);
         lblMerma.setForeground(COLOR_TEXTO);
+        add(lblMerma);
 
         txtMerma = new JTextField();
         txtMerma.setBounds(160, 150, 200, 25);
-        add(txtMerma);
         txtMerma.setBackground(COLOR_ETIQUETAS);
+        add(txtMerma);
 
-        // Boton
+        // Botones
         JButton btnCalcular = new JButton("Calcular CCB");
         btnCalcular.setBounds(120, 190, 150, 30);
-        add(btnCalcular);
         btnCalcular.setBackground(COLOR_BOTON);
         btnCalcular.setForeground(COLOR_FONDO);
-        // Boton regresar para volver a Op_Usuario
+        add(btnCalcular);
+
         JButton btnRegresar = new JButton("Regresar");
         btnRegresar.setBounds(120, 230, 150, 30);
-        add(btnRegresar);
         btnRegresar.setBackground(COLOR_BOTON);
         btnRegresar.setForeground(COLOR_FONDO);
+        add(btnRegresar);
 
-        // Etiqueta para mostrar el resultado
+        // Etiqueta para el resultado
         lblResultado = new JLabel("CCB: ");
         lblResultado.setBounds(30, 250, 300, 30);
-        add(lblResultado);
         lblResultado.setForeground(COLOR_TEXTO);
-        // Evento del boton regresar
+        add(lblResultado);
+
+        // Eventos
         btnRegresar.addActionListener(e -> {
-            this.dispose(); 
-            opUsuario.setVisible(true); 
+            this.dispose();
+            opAdmin.setVisible(true);
         });
 
-        // Evento del botón
         btnCalcular.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    // Obtener valores del formulario
                     String costosFijos = txtCostosFijos.getText();
                     String costosVariables = txtCostosVariables.getText();
                     String bandejas = txtBandejas.getText();
                     String merma = txtMerma.getText();
 
-                    // Calcular CCB
                     double ccb = controller.CalculadoraCCB.calcularCCB(costosFijos, costosVariables, bandejas, merma);
                 
                     if (ccb == 0) {
@@ -121,12 +118,10 @@ public class CargaCCB extends JFrame {
                         return;
                     }
 
-                    // Formatear resultado
                     DecimalFormat df = new DecimalFormat("#.##");
                     String ccbFormateado = df.format(ccb);
                     lblResultado.setText("CCB: " + ccbFormateado);
 
-                    // guardar archivo
                     guardarEnArchivo(costosFijos, costosVariables, bandejas, merma, ccbFormateado);
 
                 } catch (Exception ex) {
@@ -138,15 +133,10 @@ public class CargaCCB extends JFrame {
 
     private void guardarEnArchivo(String costosFijos, String costosVariables, String bandejas, String merma, String ccb) {
         try {
-
             String rutaBase = "Database";
-            // Crea la carpeta "Database" si no existe
             Files.createDirectories(Paths.get(rutaBase));
-
-            // Genera nombre del archivo con fecha/hora
             String nombreArchivo = rutaBase + "/formulario_" + getWeekRange() + ".txt";
 
-            // Escribe los datos en el archivo
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
                 writer.write("= DATOS DEL FORMULARIO =\n");
                 writer.write("Costos Fijos: " + costosFijos + "\n");
@@ -156,7 +146,6 @@ public class CargaCCB extends JFrame {
                 writer.write("\n= RESULTADO CCB =\n" + ccb + "\n");
             }
 
-            // Muestra confirmación 
             JOptionPane.showMessageDialog(null, "Archivo guardado en: " + nombreArchivo, "Éxito", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (IOException e) {
@@ -165,28 +154,10 @@ public class CargaCCB extends JFrame {
     }
 
     public static String getWeekRange() {
-        // Fecha actual (puedes cambiarla por cualquier fecha)
         LocalDate hoy = LocalDate.now();
-        
-        // Calcular el domingo (primer día de la semana)
         LocalDate domingo = hoy.with(DayOfWeek.SUNDAY);
-        
-        // Calcular el sábado (último día de la semana)
         LocalDate sabado = domingo.plusDays(6);
-        
-        // Formatear resultados (dd/MM/yyyy)
         DateTimeFormatter formateador = DateTimeFormatter.ofPattern("ddMMyyyy");
-        String domingoStr = domingo.format(formateador);
-        String sabadoStr = sabado.format(formateador);
-        
-        return domingoStr + "_" + sabadoStr;
+        return domingo.format(formateador) + "_" + sabado.format(formateador);
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-        Op_Usuario opUsuario = new Op_Usuario("UsuarioDemo", false); // Simulación de usuario actual
-        CargaCCB ventana = new CargaCCB(opUsuario); // Pasa la referencia de Op_Usuario
-        ventana.setVisible(true);
-    });
-  }
 }

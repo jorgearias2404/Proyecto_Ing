@@ -6,6 +6,7 @@ import Views.MonederoEstudiantil;
 import Views.Login;
 import Views.AdminMenuView;
 import javax.swing.*;
+import Views.CargaCCB;
 
 public class OpAdminController {
     private final Op_Admin view;
@@ -67,16 +68,17 @@ public class OpAdminController {
     }
 }
 
-    private void mostrarHistorial() {
-        try {
-            // Implementación real del historial
-            JOptionPane.showMessageDialog(view, 
-                "Funcionalidad de historial en desarrollo", 
-                "Historial", JOptionPane.INFORMATION_MESSAGE);
-        } catch (Exception e) {
-            manejarError("Error al mostrar historial", e);
-        }
+private void mostrarHistorial() {
+    try {
+        view.setVisible(false); // Oculta Op_Admin sin cerrarlo
+        SwingUtilities.invokeLater(() -> {
+            CargaCCB cargaCCB = new CargaCCB(view); // Pasa la referencia de Op_Admin
+            cargaCCB.setVisible(true); // Muestra la ventana CCB
+        });
+    } catch (Exception e) {
+        manejarError("Error al abrir calculadora CCB", e);
     }
+}
 
     private void salir() {
         try {

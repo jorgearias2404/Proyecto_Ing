@@ -66,6 +66,7 @@ public class Op_Admin extends JFrame {
         add(panelPrincipal);
         setLocationRelativeTo(null);
     }
+
     private JButton crearBoton(String texto) {
         JButton boton = new JButton(texto);
         boton.setMaximumSize(new Dimension(300, 50));
