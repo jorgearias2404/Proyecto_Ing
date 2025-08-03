@@ -4,9 +4,8 @@ import Views.MenuComedorUniversitario;
 import Views.Op_Admin;
 import Views.Op_Usuario;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
+//import Services.AuthService;
+import java.awt.*;
 
 public class MenuComedorController {
     private final MenuComedorUniversitario view;
@@ -33,65 +32,25 @@ public class MenuComedorController {
 
  
 
-    private void configurarListeners() {
-        view.setGuardarListener(this::manejarReserva);
-        view.setAtrasListener(this::manejarRegreso);
+    private void initController() {
+        view.setAtrasListener(e -> volverAOpUsuario());
     }
+    
+ private void volverAOpUsuario() {
+    view.cerrarVentana();
+    SwingUtilities.invokeLater(() -> {
+        Op_Usuario opUsuario = new Op_Usuario(usuarioActual, esAdmin);
+        new OpUsuarioController(opUsuario, usuarioActual, esAdmin); // Conectamos el controlador
+        opUsuario.setVisible(true);
+    });
+}
 
-    public void agregarSeleccion(String seleccion) {
-        selecciones.add(seleccion);
-    }
-
-    public void removerSeleccion(String seleccion) {
-        selecciones.remove(seleccion);
-    }
-
-    private void manejarReserva(ActionEvent e) {
-        try {
-            if (selecciones.isEmpty()) {
-                view.mostrarError("Debe seleccionar al menos un menú");
-                return;
-            }
-
-            StringBuilder mensaje = new StringBuilder("Reserva exitosa para:\n");
-            for (String seleccion : selecciones) {
-                mensaje.append("- ").append(seleccion).append("\n");
-            }
-            mensaje.append("Usuario: ").append(usuarioActual);
-            
-            JOptionPane.showMessageDialog(view, mensaje.toString(), "Reserva Exitosa", JOptionPane.INFORMATION_MESSAGE);
-            selecciones.clear();
-        } catch (Exception ex) {
-            manejarError("Error al procesar reserva", ex);
-        }
-    }
-
-    private void manejarRegreso(ActionEvent e) {
-        try {
-            view.cerrarVentana();
-            SwingUtilities.invokeLater(() -> {
-                if (esAdmin) {
-                    Op_Admin opAdmin = new Op_Admin(usuarioActual, true);
-                    new OpAdminController(opAdmin, usuarioActual, true);
-                    opAdmin.setVisible(true);
-                } else {
-                    Op_Usuario opUsuario = new Op_Usuario(usuarioActual, false);
-                    new OpUsuarioController(opUsuario, usuarioActual, false);
-                    opUsuario.setVisible(true);
-                }
-            });
-        } catch (Exception ex) {
-            manejarError("Error al regresar", ex);
-        }
-    }
-
-    private void manejarError(String mensaje, Exception e) {
-        System.err.println(mensaje + ": " + e.getMessage());
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(view, mensaje + ": " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    public void mostrarError(String mensaje) {
-        JOptionPane.showMessageDialog(view, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
-    }
+    // Métodos getter para colores 
+    public Color getColorFondo() { return COLOR_FONDO; }
+    public Color getColorTexto() { return COLOR_TEXTO; }
+    public Color getColorInput() { return COLOR_INPUT; }
+    public Color getColorBorde() { return COLOR_BORDE; }
+    public Color getColorBoton() { return COLOR_BOTON; }
+    public int getAnchoImagen() { return ANCHO_IMAGEN; }
+    public int getAltoImagen() { return ALTO_IMAGEN; }
 }

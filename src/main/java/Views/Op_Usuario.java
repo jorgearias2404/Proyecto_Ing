@@ -42,7 +42,7 @@ public class Op_Usuario extends JFrame {
         panelPrincipal.add(titulo);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        botonReserva = crearBoton("REALIZAR RESERVA");
+        botonReserva = crearBoton("MENÚ DEL COMEDOR");
         panelPrincipal.add(botonReserva);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 

@@ -172,18 +172,9 @@ public class MonederoEstudiantil extends JFrame {
     
     public void mostrarHistorial(String historial) {
     areaHistorial.setText("");
-    if (historial != null && !historial.trim().isEmpty()) {
-        // Aplicar formato de fuente monoespaciada para mejor alineación
-        areaHistorial.setFont(new Font("Monospaced", Font.PLAIN, 12));
+    if (historial != null) {
         
-        // Dividir transacciones y agregar separadores
-        String[] transacciones = historial.split("\\[Transacción");
-        for (String trans : transacciones) {
-            if (!trans.trim().isEmpty()) {
-                areaHistorial.append("[Transacción" + trans + "\n ");
-                areaHistorial.append("--------------------------------\n ");
-            }
-        }
+        areaHistorial.setText(historial);
     }
 }
 

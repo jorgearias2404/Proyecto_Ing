@@ -5,12 +5,9 @@ import Views.Op_Admin;
 import Views.Op_Usuario;
 import javax.swing.*;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,42 +60,36 @@ public class MonederoController {
     }
 
     public void procesarRecarga(java.awt.event.ActionEvent e) {
-        if (!validarCampos()) return;
+    if (!validarCampos()) return;
 
-        String telefono = view.getTelefono();
-        String banco = view.getBanco();
-        double monto = view.getMonto();
-
-        Estudiante estudiante = baseDatos.computeIfAbsent(usuarioActual, 
-            k -> new Estudiante(usuarioActual, "Estudiante", telefono, banco, 0.0, ""));
-
-        estudiante.saldo += monto;
-        saldo = estudiante.saldo;
-
-        String transaccion = String.format(
-            "%n[Transacción %s]%n" +
-            "Fecha/Hora: %s%n" +
-            "Tipo: Recarga%n" +
-            "Monto: %s%n" +
-            "Banco: %s%n" +
-            "Teléfono asociado: %s%n%n",
-    LocalDateTime.now().format(DateTimeFormatter.ofPattern("ddMMyyyyHHmmss")),
-    LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")),
-    formato.format(monto),
-    banco,
-    telefono);
+    String banco = view.getBanco();
+    double monto = view.getMonto();
     
-    // Asegurar que siempre empiece con historial limpio
-    if (estudiante.historial == null) estudiante.historial = "";
-    estudiante.historial += transaccion;
-
-    view.actualizarSaldo(formato.format(saldo));
-    // Muestra todo el historial
-    view.mostrarHistorial(estudiante.historial);
+    Estudiante estudiante = baseDatos.computeIfAbsent(usuarioActual, 
+        k -> new Estudiante(usuarioActual, "Estudiante", "", "", 0.0, ""));
+    
+    estudiante.saldo += monto;
+    saldo = estudiante.saldo;
+    
+    // Crear línea de transacción en formato exacto
+    String transaccion = String.format("%s,%.1f,[%s],Recarga: $%.1f,Banco: %s",
+        usuarioActual,
+        saldo,
+        LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")),
+        monto,
+        banco
+    );
+    
+    // Agregar al historial (nueva línea)
+    estudiante.historial = (estudiante.historial != null ? estudiante.historial + "\n" : "") + transaccion;
+    
+    // Actualizar vista
+    view.actualizarSaldo(String.format("$%.1f", saldo));
+    view.agregarTransaccion(transaccion); // Enviamos la línea completa ya formateada
     view.limpiarCampos();
     
     guardarBaseDatos();
-    }
+}
 
     private boolean validarCampos() {
         if (!validarTelefono()) return false;
@@ -141,36 +132,33 @@ public class MonederoController {
     String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
     new File("DataBase").mkdirs();
     
-    try {
-        String content = new String(Files.readAllBytes(Paths.get(nombreArchivo)));
-        String[] sections = content.split("--- HISTORIAL ---");
+    try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+        StringBuilder historial = new StringBuilder();
+        String linea;
+        double ultimoSaldo = 0;
         
-        if(sections.length > 1) {
-            // Procesar sección de datos
-            String dataSection = sections[0];
-            Map<String, String> dataMap = new HashMap<>();
-            Arrays.stream(dataSection.split("\n"))
-                .filter(line -> line.contains(":"))
-                .forEach(line -> {
-                    String[] parts = line.split(":", 2);
-                    dataMap.put(parts[0].trim(), parts[1].trim());
-                });
-            
-            // Procesar historial
-            String historial = sections[1].replace("|TRANSACCION_FINAL|", "\n")
-                                       .replace("-----------------", "")
-                                       .trim();
-            
-            Estudiante e = new Estudiante(
-                dataMap.get("Usuario"),
-                dataMap.get("Nombre"),
-                dataMap.get("Teléfono"),
-                dataMap.get("Banco preferido"),
-                Double.parseDouble(dataMap.get("Saldo actual").replace("$", "")),
-                historial
-            );
-            baseDatos.put(e.cedula, e);
+        while ((linea = br.readLine()) != null) {
+            if (!linea.trim().isEmpty()) {
+                historial.append(linea).append("\n");
+                // Extraer el último saldo
+                String[] partes = linea.split(",");
+                if (partes.length >= 2) {
+                    ultimoSaldo = Double.parseDouble(partes[1]);
+                }
+            }
         }
+        
+        // Crear objeto Estudiante con el historial completo
+        Estudiante e = new Estudiante(
+            usuarioActual, 
+            "Estudiante", 
+            "", 
+            "", 
+            ultimoSaldo, 
+            historial.toString()
+        );
+        baseDatos.put(e.cedula, e);
+        
     } catch (IOException e) {
         System.err.println("Error al cargar datos: " + e.getMessage());
         baseDatos.put(usuarioActual, new Estudiante(usuarioActual, "Estudiante", "", "", 0.0, ""));
@@ -178,18 +166,18 @@ public class MonederoController {
 }
 
     private void guardarBaseDatos() {
-        String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
-        
-        try (PrintWriter pw = new PrintWriter(new FileWriter(nombreArchivo))) {
-            Estudiante estudiante = baseDatos.get(usuarioActual);
-            if (estudiante != null) {
-                pw.println(estudiante);
-            }
-        } catch (IOException e) {
-            System.err.println("Error al guardar datos: " + e.getMessage());
-            view.mostrarError("Error al guardar los datos");
+    String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
+    
+    try (PrintWriter pw = new PrintWriter(new FileWriter(nombreArchivo))) {
+        Estudiante estudiante = baseDatos.get(usuarioActual);
+        if (estudiante != null && estudiante.historial != null) {
+            pw.print(estudiante.historial);
         }
+    } catch (IOException e) {
+        System.err.println("Error al guardar datos: " + e.getMessage());
+        view.mostrarError("Error al guardar los datos");
     }
+}
 
    public void regresarAUsuario(java.awt.event.ActionEvent e) {
     view.cerrarVentana();
@@ -220,20 +208,60 @@ public class MonederoController {
                  : " " ;
         }
 
-        @Override
-        public String toString() {
-    // Separar el historial con un delimitador claro
-    String histParaArchivo = historial.replace("\n", " ");
-    return String.format(
-        "Usuario: %s\n" +
-        "Nombre: %s\n" +
-        "Teléfono: %s\n" +
-        "Banco preferido: %s\n" +
-        "Saldo actual: %s\n" +
-        "--- HISTORIAL ---\n%s\n" +
-        "-----------------",
-        cedula, nombre, telefono, banco, 
-        String.valueOf(saldo), histParaArchivo);
+      
+      @Override
+    public String toString() {
+        if (historial == null || historial.isEmpty()) {
+            return String.join(",",
+                cedula,
+                String.valueOf(saldo),
+                "[]",
+                "Recarga: $0.0",
+                "Banco: "
+            );
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        String[] transacciones = historial.split("\n");
+        
+        // Cada transacción genera una línea completa
+        for (String trans : transacciones) {
+            if (!trans.trim().isEmpty()) {
+                String[] partes = parseTransaccion(trans);
+                if (partes != null) {
+                    sb.append(String.join(",",
+                        cedula,
+                        String.valueOf(saldo),
+                        "[" + partes[0] + "]",
+                        "Recarga: $" + partes[2],
+                        "Banco: " + partes[3]
+                    )).append("\n");
+                }
+            }
+        }
+        
+        return sb.toString().trim(); // Eliminar el último \n
+    }
+    
+    private String[] parseTransaccion(String transaccion) {
+        try {
+            String fecha = transaccion.substring(
+                transaccion.indexOf("[") + 1, 
+                transaccion.indexOf("]"));
+            
+            String montoStr = transaccion.substring(
+                transaccion.indexOf("$") + 1, 
+                transaccion.indexOf(" - Banco:"));
+            
+            String banco = transaccion.substring(
+                transaccion.indexOf("Banco: ") + 7)
+                .replace("#", "").trim();
+            
+            return new String[]{fecha, "Recarga", montoStr, banco};
+        } catch (Exception e) {
+            System.err.println("Error parseando transacción: " + transaccion);
+            return null;
+        }
     }
   }
 }
