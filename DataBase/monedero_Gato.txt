@@ -1,0 +1,1 @@
+Gato,Estudiante,04241718964,Banco Provincial,40.0,[02/08/25 21:16] Recarga: $10.00 - Banco: Banco Provincial[02/08/25 21:17] Recarga: $20.00 - Banco: Banco Nacional[02/08/25 21:17] Recarga: $10.00 - Banco: Banco Nacional\n
