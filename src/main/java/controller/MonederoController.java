@@ -55,7 +55,7 @@ public class MonederoController {
         estudiante.saldo += monto;
         saldo = estudiante.saldo;
 
-        String transaccion = String.format("[%s] Recarga: %s - Banco: %s%n",
+        String transaccion = String.format("[%s] Recarga: %s - Banco: %s#%n ",
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")),
             formato.format(monto),
             banco
