@@ -30,6 +30,10 @@ public class ControladorImagen implements ActionListener {
       
     }
 
+    public ControladorImagen(boolean a) {
+        lector = new ReadDatabase("secretaria.txt");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String comando = e.getActionCommand();
@@ -78,7 +82,7 @@ public class ControladorImagen implements ActionListener {
         }
     }
 
-    private boolean hacerComparacion(String filePath) {
+    public boolean hacerComparacion(String filePath) {
         String contenido = lector.leerArchivo();
         String info[]  = contenido.split("#");
         for(int i = 3; i < info.length; i += 4) {
@@ -90,6 +94,7 @@ public class ControladorImagen implements ActionListener {
                 }
             } catch (IOException e) {
                 System.err.println("no se pudo abrir algun archivo de imagen");
+                return false;
             }
            
         }
