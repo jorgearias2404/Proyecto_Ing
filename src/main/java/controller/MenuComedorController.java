@@ -5,16 +5,9 @@ import Views.Op_Usuario;
 import javax.swing.*;
 //import Services.AuthService;
 import java.awt.*;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MenuComedorController {
     private final MenuComedorUniversitario view;
-    private final List<String> selecciones;
     private final String usuarioActual;
     private final boolean esAdmin;
     
@@ -28,65 +21,15 @@ public class MenuComedorController {
 
     public MenuComedorController(MenuComedorUniversitario view, String usuario, boolean esAdmin) {
         this.view = view;
-        this.selecciones = new ArrayList<>();
         this.usuarioActual = usuario;
         this.esAdmin = esAdmin;
         initController();
     }
 
     private void initController() {
-        view.setGuardarListener(e -> guardarSelecciones());
         view.setAtrasListener(e -> volverAOpUsuario());
     }
-
-    public void agregarSeleccion(String seleccion) {
-        if (!selecciones.contains(seleccion)) {
-            selecciones.add(seleccion);
-        }
-    }
-
-    public void removerSeleccion(String seleccion) {
-        selecciones.remove(seleccion);
-    }
-
-   private void guardarSelecciones() {
-    if (selecciones.isEmpty()) {
-        JOptionPane.showMessageDialog(view, 
-            "No hay selecciones para guardar.", 
-            "Advertencia", 
-            JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    String directorio = "DataBase/selecciones";
-    try {
-        Files.createDirectories(Paths.get(directorio)); // Crea el directorio si no existe
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(view, 
-            "Error al crear directorio: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    String nombreArchivo = directorio + "/" + usuarioActual + ".txt"; // Nombre personalizado: usuario.txt
-
-    try (FileWriter writer = new FileWriter(nombreArchivo, true)) { // Modo append=true para añadir al final
-        for (String seleccion : selecciones) {
-            writer.write(seleccion + "\n"); // Añade cada selección en una nueva línea
-        }
-        JOptionPane.showMessageDialog(view, 
-            "¡Se guardaron " + selecciones.size() + " selecciones para " + usuarioActual + "!", 
-            "Éxito", 
-            JOptionPane.INFORMATION_MESSAGE);
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(view, 
-            "Error al guardar: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-    }
-}
-
+    
  private void volverAOpUsuario() {
     view.cerrarVentana();
     SwingUtilities.invokeLater(() -> {
