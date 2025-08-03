@@ -3,6 +3,7 @@ package controller;
 import Services.AuthService;
 import Views.Login;
 import Views.Op_Usuario;
+import Views.Op_Admin;
 import Views.Registration;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +11,7 @@ import java.awt.event.ActionEvent;
 public class LoginController {
     private final Login loginView;
     private final AuthService authService;
-    private static final String ADMIN_SECRET_KEY = "claveAdmin123"; // Clave especial para administradores
+    private static final String ADMIN_SECRET_KEY = "claveAdmin123";
     
     public LoginController(Login loginView) {
         this.loginView = loginView;
@@ -32,20 +33,24 @@ public class LoginController {
             return;
         }
 
-        boolean isAdmin = username.startsWith("admin_");
+        // Verificar si es administrador basado en el AuthService
+        boolean isAdmin = authService.validarLogin(username, password, true);
+        boolean isUser = authService.validarLogin(username, password, false);
+        
+        // Determinar el tipo de usuario correcto
         if (isAdmin) {
-            String secretKey = JOptionPane.showInputDialog(loginView, 
-                "Ingrese la clave especial de administrador:", 
-                "Clave de Administrador", 
-                JOptionPane.PLAIN_MESSAGE);
-            
-            if (!ADMIN_SECRET_KEY.equals(secretKey)) {
-                loginView.showError("Clave de administrador incorrecta");
-                return;
-            }
+            // Es administrador, proceder con el login
+        } else if (isUser) {
+            // Es usuario regular, proceder con el login
+            isAdmin = false;
+        } else {
+            // Credenciales incorrectas
+            loginView.showError("Credenciales incorrectas");
+            return;
         }
 
-        boolean loginExitoso = authService.validarLogin(username, password, isAdmin);
+        // Usar las credenciales ya verificadas
+        boolean loginExitoso = isAdmin || isUser;
         
         if (loginExitoso) {
             handleSuccessfulLogin(username, isAdmin);
@@ -62,9 +67,15 @@ public class LoginController {
         loginView.close();
         
         SwingUtilities.invokeLater(() -> {
-            Op_Usuario opUsuario = new Op_Usuario(username, isAdmin);
-            new OpUsuarioController(opUsuario, username, isAdmin);
-            opUsuario.setVisible(true);
+            if (isAdmin) {
+                Op_Admin opAdmin = new Op_Admin(username, true);
+                new OpAdminController(opAdmin, username, true);
+                opAdmin.setVisible(true);
+            } else {
+                Op_Usuario opUsuario = new Op_Usuario(username, false);
+                new OpUsuarioController(opUsuario, username, false);
+                opUsuario.setVisible(true);
+            }
         });
     }
     
