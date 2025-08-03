@@ -1,6 +1,7 @@
 package controller;
 
 import Views.MonederoEstudiantil;
+import Views.Op_Admin;
 import Views.Op_Usuario;
 import javax.swing.*;
 import java.io.*;
@@ -31,9 +32,20 @@ public class MonederoController {
         cargarSaldoInicial();
     }
 
-    private void configurarListeners() {
-        view.setRecargarListener(this::procesarRecarga);
-        view.setRegresarListener(this::regresarAUsuario);
+       private void configurarListeners() {
+        // Modificar el listener de regreso
+        view.setRegresarListener(e -> {
+            if (esAdmin) {
+                Op_Admin opAdmin = new Op_Admin(usuarioActual, true);
+                new OpAdminController(opAdmin, usuarioActual, true);
+                opAdmin.setVisible(true);
+            } else {
+                Op_Usuario opUsuario = new Op_Usuario(usuarioActual, false);
+                new OpUsuarioController(opUsuario, usuarioActual, false);
+                opUsuario.setVisible(true);
+            }
+            view.cerrarVentana();
+        });
     }
 
     private void cargarSaldoInicial() {

@@ -19,6 +19,7 @@ public class MenuComedorUniversitario extends JFrame {
 
     public void setController(MenuComedorController controller) {
         this.controller = controller;
+
     }
 
     private void initComponents() {
@@ -26,11 +27,10 @@ public class MenuComedorUniversitario extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        Color colorFondo = controller != null ? controller.getColorFondo() : new Color(7, 64, 91);
         panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        panelPrincipal.setBackground(colorFondo);
+        panelPrincipal.setBackground(new Color(7, 64, 91)); // Color por defecto
 
         JLabel titulo = new JLabel("Menú Semanal del Comedor", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
@@ -129,7 +129,7 @@ public class MenuComedorUniversitario extends JFrame {
         });
 
         JPanel panelBotones = new JPanel();
-        panelBotones.setBackground(colorFondo);
+        panelBotones.setBackground(panelPrincipal.getBackground());
         panelBotones.add(btnGuardar);
         panelBotones.add(btnAtras);
 
@@ -152,15 +152,17 @@ public class MenuComedorUniversitario extends JFrame {
         this.dispose();
     }
 
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             String usuario = "UsuarioDemo";
-        boolean esAdmin = false; // o true si es admin
-        String usuarioActual = usuario; // Simulación de usuario actual
-        MenuComedorUniversitario view = new MenuComedorUniversitario(usuarioActual);
-        MenuComedorController controller = new MenuComedorController(view, usuarioActual, esAdmin);
-        view.setController(controller);
-        view.setVisible(true);
-    });
+            boolean esAdmin = false;
+            MenuComedorUniversitario view = new MenuComedorUniversitario(usuario);
+            MenuComedorController controller = new MenuComedorController(view, usuario, esAdmin);
+            view.setVisible(true);
+        });
     }
 }

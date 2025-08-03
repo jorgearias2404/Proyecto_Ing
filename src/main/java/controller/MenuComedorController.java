@@ -1,107 +1,97 @@
 package controller;
 
 import Views.MenuComedorUniversitario;
+import Views.Op_Admin;
 import Views.Op_Usuario;
 import javax.swing.*;
-//import Services.AuthService;
-import java.awt.*;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MenuComedorController {
     private final MenuComedorUniversitario view;
-    private final List<String> selecciones;
     private final String usuarioActual;
     private final boolean esAdmin;
-    
-    private static final Color COLOR_FONDO = new Color(7, 64, 91);
-    private static final Color COLOR_TEXTO = new Color(240, 240, 240);
-    private static final Color COLOR_INPUT = new Color(151, 188, 199);
-    private static final Color COLOR_BORDE = new Color(100, 100, 100);
-    private static final Color COLOR_BOTON = new Color(151, 188, 199);
-    private static final int ANCHO_IMAGEN = 120;
-    private static final int ALTO_IMAGEN = 120;
+    private final List<String> selecciones;
+  
 
     public MenuComedorController(MenuComedorUniversitario view, String usuario, boolean esAdmin) {
+        if (view == null) {
+            throw new IllegalArgumentException("La vista no puede ser nula");
+        }
+        if (usuario == null || usuario.trim().isEmpty()) {
+            throw new IllegalArgumentException("El usuario no puede estar vacío");
+        }
+
         this.view = view;
-        this.selecciones = new ArrayList<>();
         this.usuarioActual = usuario;
         this.esAdmin = esAdmin;
-        initController();
+        this.selecciones = new ArrayList<>();
+        configurarListeners();
+        view.setController(this);
     }
 
-    private void initController() {
-        view.setGuardarListener(e -> guardarSelecciones());
-        view.setAtrasListener(e -> volverAOpUsuario());
+ 
+
+    private void configurarListeners() {
+        view.setGuardarListener(this::manejarReserva);
+        view.setAtrasListener(this::manejarRegreso);
     }
 
     public void agregarSeleccion(String seleccion) {
-        if (!selecciones.contains(seleccion)) {
-            selecciones.add(seleccion);
-        }
+        selecciones.add(seleccion);
     }
 
     public void removerSeleccion(String seleccion) {
         selecciones.remove(seleccion);
     }
 
-   private void guardarSelecciones() {
-    if (selecciones.isEmpty()) {
-        JOptionPane.showMessageDialog(view, 
-            "No hay selecciones para guardar.", 
-            "Advertencia", 
-            JOptionPane.WARNING_MESSAGE);
-        return;
-    }
+    private void manejarReserva(ActionEvent e) {
+        try {
+            if (selecciones.isEmpty()) {
+                view.mostrarError("Debe seleccionar al menos un menú");
+                return;
+            }
 
-    String directorio = "DataBase/selecciones";
-    try {
-        Files.createDirectories(Paths.get(directorio)); // Crea el directorio si no existe
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(view, 
-            "Error al crear directorio: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    String nombreArchivo = directorio + "/" + usuarioActual + ".txt"; // Nombre personalizado: usuario.txt
-
-    try (FileWriter writer = new FileWriter(nombreArchivo, true)) { // Modo append=true para añadir al final
-        for (String seleccion : selecciones) {
-            writer.write(seleccion + "\n"); // Añade cada selección en una nueva línea
+            StringBuilder mensaje = new StringBuilder("Reserva exitosa para:\n");
+            for (String seleccion : selecciones) {
+                mensaje.append("- ").append(seleccion).append("\n");
+            }
+            mensaje.append("Usuario: ").append(usuarioActual);
+            
+            JOptionPane.showMessageDialog(view, mensaje.toString(), "Reserva Exitosa", JOptionPane.INFORMATION_MESSAGE);
+            selecciones.clear();
+        } catch (Exception ex) {
+            manejarError("Error al procesar reserva", ex);
         }
-        JOptionPane.showMessageDialog(view, 
-            "¡Se guardaron " + selecciones.size() + " selecciones para " + usuarioActual + "!", 
-            "Éxito", 
-            JOptionPane.INFORMATION_MESSAGE);
-    } catch (IOException e) {
-        JOptionPane.showMessageDialog(view, 
-            "Error al guardar: " + e.getMessage(), 
-            "Error", 
-            JOptionPane.ERROR_MESSAGE);
     }
-}
 
- private void volverAOpUsuario() {
-    view.cerrarVentana();
-    SwingUtilities.invokeLater(() -> {
-        Op_Usuario opUsuario = new Op_Usuario(usuarioActual, esAdmin);
-        new OpUsuarioController(opUsuario, usuarioActual, esAdmin); // Conectamos el controlador
-        opUsuario.setVisible(true);
-    });
-}
+    private void manejarRegreso(ActionEvent e) {
+        try {
+            view.cerrarVentana();
+            SwingUtilities.invokeLater(() -> {
+                if (esAdmin) {
+                    Op_Admin opAdmin = new Op_Admin(usuarioActual, true);
+                    new OpAdminController(opAdmin, usuarioActual, true);
+                    opAdmin.setVisible(true);
+                } else {
+                    Op_Usuario opUsuario = new Op_Usuario(usuarioActual, false);
+                    new OpUsuarioController(opUsuario, usuarioActual, false);
+                    opUsuario.setVisible(true);
+                }
+            });
+        } catch (Exception ex) {
+            manejarError("Error al regresar", ex);
+        }
+    }
 
-    // Métodos getter para colores 
-    public Color getColorFondo() { return COLOR_FONDO; }
-    public Color getColorTexto() { return COLOR_TEXTO; }
-    public Color getColorInput() { return COLOR_INPUT; }
-    public Color getColorBorde() { return COLOR_BORDE; }
-    public Color getColorBoton() { return COLOR_BOTON; }
-    public int getAnchoImagen() { return ANCHO_IMAGEN; }
-    public int getAltoImagen() { return ALTO_IMAGEN; }
+    private void manejarError(String mensaje, Exception e) {
+        System.err.println(mensaje + ": " + e.getMessage());
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(view, mensaje + ": " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(view, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
 }

@@ -4,6 +4,7 @@ import Views.Op_Admin;
 import Views.MenuComedorUniversitario;
 import Views.MonederoEstudiantil;
 import Views.Login;
+import Views.CargaCCB;
 import Views.AdminMenuView;
 import javax.swing.*;
 
@@ -29,7 +30,7 @@ public class OpAdminController {
     private void configurarListeners() {
         try {
             view.addReservaListener(e -> abrirMenuComedor());
-            view.addHistorialListener(e -> mostrarHistorial());
+            view.addHistorialListener(e -> abrirCalculadoraCCB());
             view.addRecargarListener(e -> abrirMonedero());
             view.addSalirListener(e -> salir());
 
@@ -68,14 +69,15 @@ public class OpAdminController {
         }
     }
 
-    private void mostrarHistorial() {
+    private void abrirCalculadoraCCB() {
         try {
-            // Implementación real del historial
-            JOptionPane.showMessageDialog(view, 
-                "Funcionalidad de historial en desarrollo", 
-                "Historial", JOptionPane.INFORMATION_MESSAGE);
+            view.cerrarVentana();
+            SwingUtilities.invokeLater(() -> {
+                CargaCCB cargaCCB = new CargaCCB(usuarioActual, true);
+                cargaCCB.setVisible(true);
+            });
         } catch (Exception e) {
-            manejarError("Error al mostrar historial", e);
+            manejarError("Error al abrir calculadora CCB", e);
         }
     }
 
@@ -103,7 +105,7 @@ public class OpAdminController {
             view.cerrarVentana();
             SwingUtilities.invokeLater(() -> {
                 AdminMenuView adminView = new AdminMenuView(usuarioActual);
-                new AdminMenuController(adminView, usuarioActual);
+                new AdminMenuController(adminView, usuarioActual, true);
                 adminView.setVisible(true);
             });
         } catch (Exception e) {

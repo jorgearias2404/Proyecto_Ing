@@ -1,6 +1,7 @@
 package controller;
 
 import Views.AdminMenuView;
+import Views.Op_Admin;
 import Views.Op_Usuario;
 import javax.swing.*;
 import java.io.FileWriter;
@@ -14,9 +15,11 @@ import java.util.Map;
 public class AdminMenuController {
     private final AdminMenuView view;
     private final String usuarioActual;
+    private final boolean esAdmin; // Solo agregamos este campo
     private static final String ARCHIVO_MENU = "Database/menus/menu_semanal.txt";
 
-    public AdminMenuController(AdminMenuView view, String usuario) {
+    // Constructor modificado para recibir esAdmin (único cambio en firma)
+    public AdminMenuController(AdminMenuView view, String usuario, boolean esAdmin) {
         if (view == null) {
             throw new IllegalArgumentException("La vista no puede ser nula");
         }
@@ -26,15 +29,33 @@ public class AdminMenuController {
 
         this.view = view;
         this.usuarioActual = usuario;
+        this.esAdmin = esAdmin; // Asignación del nuevo campo
         initController();
     }
 
     private void initController() {
         view.setGuardarListener(e -> guardarMenu());
-        view.setAtrasListener(e -> volverAOpUsuario());
+        view.setAtrasListener(e -> volverAOpUsuario()); // Este método será modificado
         cargarMenuExistente();
     }
 
+    // Método volverAOpUsuario modificado (solo lógica interna)
+    private void volverAOpUsuario() {
+        view.dispose();
+        SwingUtilities.invokeLater(() -> {
+            if (esAdmin) {
+                Op_Admin opAdmin = new Op_Admin(usuarioActual, true);
+                new OpAdminController(opAdmin, usuarioActual, true);
+                opAdmin.setVisible(true);
+            } else {
+                Op_Usuario opUsuario = new Op_Usuario(usuarioActual, false);
+                new OpUsuarioController(opUsuario, usuarioActual, false);
+                opUsuario.setVisible(true);
+            }
+        });
+    }
+
+    // Todos los demás métodos se mantienen EXACTAMENTE igual
     private void cargarMenuExistente() {
         try {
             if (Files.exists(Paths.get(ARCHIVO_MENU))) {
@@ -52,7 +73,7 @@ public class AdminMenuController {
         try {
             Map<String, String> datos = validarDatosMenu();
             guardarMenuEnArchivo(datos);
-            cargarMenuExistente(); // Actualizar vista con los nuevos datos
+            cargarMenuExistente();
         } catch (IllegalArgumentException e) {
             JOptionPane.showMessageDialog(view, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
@@ -103,15 +124,6 @@ public class AdminMenuController {
                 "Éxito", 
                 JOptionPane.INFORMATION_MESSAGE);
         }
-    }
-
-    private void volverAOpUsuario() {
-        view.dispose();
-        SwingUtilities.invokeLater(() -> {
-            Op_Usuario opUsuario = new Op_Usuario(usuarioActual, true);
-            new OpUsuarioController(opUsuario, usuarioActual, true);
-            opUsuario.setVisible(true);
-        });
     }
 
     private void mostrarError(String mensaje, Exception e) {

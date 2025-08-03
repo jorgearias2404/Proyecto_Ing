@@ -80,22 +80,22 @@ public class OpUsuarioController {
         }
     }
 
-    private void abrirAdminMenu() {
-        try {
-            if (!esAdmin) {
-                throw new IllegalAccessException("Acceso denegado: se requiere privilegios de administrador");
-            }
-            
-            view.cerrarVentana();
-            SwingUtilities.invokeLater(() -> {
-                AdminMenuView adminView = new AdminMenuView(usuarioActual);
-                new AdminMenuController(adminView, usuarioActual);
-                adminView.setVisible(true);
-            });
-        } catch (Exception e) {
-            manejarError("Error al abrir menú de administrador", e);
+private void abrirAdminMenu() {
+    try {
+        if (!esAdmin) {
+            throw new IllegalAccessException("Acceso denegado: se requiere privilegios de administrador");
         }
+        
+        view.cerrarVentana();
+        SwingUtilities.invokeLater(() -> {
+            AdminMenuView adminView = new AdminMenuView(usuarioActual);
+            new AdminMenuController(adminView, usuarioActual, true); // Pasar true explícitamente para admin
+            adminView.setVisible(true);
+        });
+    } catch (Exception e) {
+        manejarError("Error al abrir menú de administrador", e);
     }
+}
 
     private void manejarError(String mensaje, Exception e) {
         System.err.println(mensaje + ": " + e.getMessage());
