@@ -161,12 +161,23 @@ public class MonederoEstudiantil extends JFrame {
     }
     
     public void agregarTransaccion(String transaccion) {
+         if (transaccion != null && !transaccion.isEmpty()) {
+        if (!transaccion.endsWith("\n ")) {
+            transaccion += "\n ";
+        }
         areaHistorial.append(transaccion);
+        areaHistorial.setCaretPosition(areaHistorial.getDocument().getLength());
+     }
     }
     
     public void mostrarHistorial(String historial) {
-        areaHistorial.setText(historial);
-    }
+    // Limpiar y mostrar todo el historial
+    areaHistorial.setText("");
+    if (historial != null && !historial.trim().isEmpty()) {
+        // Reemplazar cualquier # residual
+        areaHistorial.setText(historial.replace("#", ""));
+      }
+   }
     
     public void limpiarCampos() {
         campoTelefono.setText("");
@@ -183,7 +194,7 @@ public class MonederoEstudiantil extends JFrame {
     }
     
 public void setController(MonederoController controller) {
-    this.recargarListener = e -> controller.procesarRecarga(e);  // Nombre correcto
+    this.recargarListener = e -> controller.procesarRecarga(e);  
    this.regresarListener = e -> {
         controller.regresarAUsuario(e);
         this.cerrarVentana();

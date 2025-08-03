@@ -38,8 +38,13 @@ public class MonederoController {
         if (estudiante != null) {
             saldo = estudiante.saldo;
             view.actualizarSaldo(formato.format(saldo));
-            view.mostrarHistorial(estudiante.historial);
-        }
+            view.mostrarHistorial(estudiante.historial != null ? estudiante.historial : "");
+    } else {
+        // Inicializar un nuevo estudiante si no existe
+        estudiante = new Estudiante(usuarioActual, "Estudiante", "", "", 0.0, "");
+        baseDatos.put(usuarioActual, estudiante);
+        guardarBaseDatos();
+     }
     }
 
     public void procesarRecarga(java.awt.event.ActionEvent e) {
@@ -55,18 +60,22 @@ public class MonederoController {
         estudiante.saldo += monto;
         saldo = estudiante.saldo;
 
-        String transaccion = String.format("[%s] Recarga: %s - Banco: %s#%n ",
-            LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")),
-            formato.format(monto),
-            banco
-        );
-        estudiante.historial += transaccion;
+        String transaccion = String.format("[%s] Recarga: %s - Banco: %s%n",
+        LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")),
+        formato.format(monto),
+        banco
+    );
+    
+    // Asegurar que siempre empiece con historial limpio
+    if (estudiante.historial == null) estudiante.historial = "";
+    estudiante.historial += transaccion;
 
-        view.actualizarSaldo(formato.format(saldo));
-        view.agregarTransaccion(transaccion);
-        view.limpiarCampos();
-        
-        guardarBaseDatos();
+    view.actualizarSaldo(formato.format(saldo));
+    // Muestra todo el historial
+    view.mostrarHistorial(estudiante.historial);
+    view.limpiarCampos();
+    
+    guardarBaseDatos();
     }
 
     private boolean validarCampos() {
@@ -107,25 +116,30 @@ public class MonederoController {
     }
 
     private void cargarBaseDatos() {
-        String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
-        new File("DataBase").mkdirs();
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                String[] partes = linea.split(",", 6);
-                if (partes.length == 6) {
-                    Estudiante e = new Estudiante(
-                        partes[0], partes[1], partes[2], partes[3],
-                        Double.parseDouble(partes[4]), partes[5]
-                    );
-                    baseDatos.put(e.cedula, e);
-                }
+    String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
+    new File("DataBase").mkdirs();
+    
+    try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
+        String linea;
+        while ((linea = br.readLine()) != null) {
+            // Manejar líneas vacías o mal formadas
+            if (linea.trim().isEmpty()) continue;
+            
+            String[] partes = linea.split(",", 6);
+            if (partes.length == 6) {
+                Estudiante e = new Estudiante(
+                    partes[0], partes[1], partes[2], partes[3],
+                    Double.parseDouble(partes[4]), partes[5]
+                );
+                baseDatos.put(e.cedula, e);
             }
-        } catch (IOException e) {
-            System.err.println("Error al cargar datos: " + e.getMessage());
         }
+    } catch (IOException e) {
+        System.err.println("Error al cargar datos: " + e.getMessage());
+        // Inicializar con datos vacíos si hay error
+        baseDatos.put(usuarioActual, new Estudiante(usuarioActual, "Estudiante", "", "", 0.0, ""));
     }
+}
 
     private void guardarBaseDatos() {
         String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
@@ -165,13 +179,16 @@ public class MonederoController {
             this.telefono = telefono;
             this.banco = banco;
             this.saldo = saldo;
-            this.historial = historial;
+            this.historial = (historial != null) 
+                 ? historial.replace("||n||", "\n ").replace("#", " ").trim()
+                 : " " ;
         }
 
         @Override
         public String toString() {
-            return String.join(",", cedula, nombre, telefono, banco, 
-                             String.valueOf(saldo), historial.replace("\n", "\\n"));
-        }
+              String histParaArchivo = historial.replace("\n", "||n|| ");
+              return String.join(",", cedula, nombre, telefono, banco, 
+                     String.valueOf(saldo), histParaArchivo);
     }
+  }
 }
