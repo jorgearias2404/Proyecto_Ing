@@ -45,6 +45,6 @@ public class RegistrationTests {
         Assert.assertEquals(true, val.validateForm("sergioferg.2003@gmail.com", "contra123", "123456", "30142272", "Empleado"));
         Assert.assertEquals(false, val.validateForm("sergioferg.2003@gmail.com", "contra123", "123456", "30142272", "Rol"));
 
-        Assert.assertEquals("Debe seleccionar un rol", val.errorMessage);
+        Assert.assertEquals("Todos los campos marcados con * son obligatorios", val.errorMessage);
     }
 }
