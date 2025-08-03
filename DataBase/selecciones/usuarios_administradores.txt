@@ -6,3 +6,5 @@ user|sergiogo|sergiog123|sergiogo (30142272)|sergioferg.2003@gmail.com
 user|Alfonso|alfonso24234234|Alfonso (11818679)|algoloco@gmail.com
 user|Koloton|algoenfermo1243|Koloton (233123123)|jorge@gmail.com
 user|Gato|gatosucio123|Gato (818679)|algohediendo@gmail.com
+
+admin|algo|4a83289cc25a20df3104e10b81592a785783793ab9ca38972956540a8b567d6f|algo (12)|algo@gmail.com

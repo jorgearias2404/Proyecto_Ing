@@ -2,7 +2,7 @@ package controller;
 
 public class ValidarFormularioRegistro {
     public String errorMessage = "";
-    private static final String ADMIN_PASSWORD = "admin12345";
+    private static final String ADMIN_PASSWORD = "admin12345";  // Contraseña de validación para rol Admin
 
     public boolean validateForm(String email, String password, String username, String id, String role) {
         if (email.isEmpty() || password.isEmpty() || username.isEmpty() || id.isEmpty() || role.equals("Rol")) {
@@ -15,12 +15,9 @@ public class ValidarFormularioRegistro {
             return false;
         }
 
-        if (!isValidPassword(password, role)) {
-            if (role.equals("Administrador")) {
-                errorMessage = "Para rol Administrador, la contraseña debe ser: " + ADMIN_PASSWORD;
-            } else {
-                errorMessage = "La contraseña debe tener al menos 15 caracteres O al menos 8 caracteres incluyendo un número y una letra minúscula";
-            }
+        // Validación de contraseña personal (aplica para todos, incluidos admins)
+        if (!isValidPassword(password)) {
+            errorMessage = "La contraseña debe tener al menos 15 caracteres O al menos 8 caracteres incluyendo un número y una letra minúscula";
             return false;
         }
 
@@ -37,19 +34,16 @@ public class ValidarFormularioRegistro {
         return true;
     }
 
-    public boolean validateAdminPassword(String password) {
-        return password.equals(ADMIN_PASSWORD);
+    // Valida la contraseña de administrador (solo para verificación de rol)
+    public boolean validateAdminPassword(String inputPassword) {
+        return inputPassword.equals(ADMIN_PASSWORD);
     }
 
-    private boolean isValidPassword(String password, String role) {
-        if (role.equals("Administrador")) {
-            return password.equals(ADMIN_PASSWORD);
-        }
-        
+    // Valida la contraseña personal (reglas para todos los usuarios)
+    private boolean isValidPassword(String password) {
         if (password.length() >= 15) {
             return true;
         }
-        
         return password.length() >= 8 && 
                password.matches(".*\\d.*") && 
                password.matches(".*[a-z].*");
