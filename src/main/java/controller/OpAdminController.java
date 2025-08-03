@@ -1,18 +1,18 @@
 package controller;
 
-import Views.Op_Usuario;
+import Views.Op_Admin;
 import Views.MenuComedorUniversitario;
 import Views.MonederoEstudiantil;
 import Views.Login;
 import Views.AdminMenuView;
 import javax.swing.*;
 
-public class OpUsuarioController {
-    private final Op_Usuario view;
+public class OpAdminController {
+    private final Op_Admin view;
     private final String usuarioActual;
     private final boolean esAdmin;
 
-    public OpUsuarioController(Op_Usuario view, String usuario, boolean esAdmin) {
+    public OpAdminController(Op_Admin view, String usuario, boolean esAdmin) {
         if (view == null) {
             throw new IllegalArgumentException("La vista no puede ser nula");
         }
@@ -29,6 +29,7 @@ public class OpUsuarioController {
     private void configurarListeners() {
         try {
             view.addReservaListener(e -> abrirMenuComedor());
+            view.addHistorialListener(e -> mostrarHistorial());
             view.addRecargarListener(e -> abrirMonedero());
             view.addSalirListener(e -> salir());
 
@@ -67,6 +68,17 @@ public class OpUsuarioController {
         }
     }
 
+    private void mostrarHistorial() {
+        try {
+            // Implementación real del historial
+            JOptionPane.showMessageDialog(view, 
+                "Funcionalidad de historial en desarrollo", 
+                "Historial", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            manejarError("Error al mostrar historial", e);
+        }
+    }
+
     private void salir() {
         try {
             view.cerrarVentana();
@@ -76,7 +88,9 @@ public class OpUsuarioController {
                 loginView.setVisible(true);
             });
         } catch (Exception e) {
-            manejarError("Error al cerrar sesión", e);
+            JOptionPane.showMessageDialog(null, 
+                "Error al cerrar sesión: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -103,8 +117,5 @@ public class OpUsuarioController {
         JOptionPane.showMessageDialog(view, 
             mensaje + ": " + e.getMessage(), 
             "Error", JOptionPane.ERROR_MESSAGE);
-            
-        // Volver al login en caso de error crítico
-        salir();
     }
 }

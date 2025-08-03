@@ -12,6 +12,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 public class RegistrationController {
@@ -60,7 +63,10 @@ public class RegistrationController {
                 // Validación de rol administrador
                 if (view.getRole().equals("Administrador")) {
                     String adminPassword = view.showAdminPasswordDialog();
-                    if (adminPassword == null) return;
+                    if (adminPassword == null) {
+                        view.showError("Debe ingresar la contraseña de administrador");
+                        return;
+                    }
                     
                     ValidarFormularioRegistro validator = new ValidarFormularioRegistro();
                     if (!validator.validateAdminPassword(adminPassword)) {
@@ -81,11 +87,11 @@ public class RegistrationController {
                 String email = view.getEmail().trim().toLowerCase();
                 String id = view.getID().trim();
                 String username = view.getUsername().trim();
-                String password = view.getPassword();
+                String password = encryptPassword(view.getPassword()); // Contraseña encriptada
                 String role = view.getRole().equals("Administrador") ? "admin" : "user";
 
                 // Verificación de duplicados
-                String duplicateError = checkForDuplicates(email, id, username, password, role);
+                String duplicateError = checkForDuplicates(email, id, username);
                 if (duplicateError != null) {
                     view.showError(duplicateError);
                     return;
@@ -95,7 +101,7 @@ public class RegistrationController {
                 String userData = String.format("%s|%s|%s|%s (%s)|%s",
                     role,
                     username,
-                    password,
+                    password, // Guarda la contraseña encriptada
                     username,
                     id,
                     email);
@@ -117,18 +123,24 @@ public class RegistrationController {
             }
         }
 
-        private String checkForDuplicates(String email, String id, String username, String password, String role) throws IOException {
+        private String encryptPassword(String password) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                byte[] hashedBytes = md.digest(password.getBytes());
+                StringBuilder sb = new StringBuilder();
+                for (byte b : hashedBytes) {
+                    sb.append(String.format("%02x", b));
+                }
+                return sb.toString();
+            } catch (NoSuchAlgorithmException e) {
+                System.err.println("Error al encriptar contraseña: " + e.getMessage());
+                throw new RuntimeException("Error en el sistema de seguridad");
+            }
+        }
+
+        private String checkForDuplicates(String email, String id, String username) throws IOException {
             File file = new File(USERS_FILE);
             if (!file.exists()) return null;
-
-            // Prepara el nuevo registro normalizado para comparación
-            String newEntryNormalized = String.format("%s|%s|%s|%s(%s)|%s",
-                role,
-                username.toLowerCase(),
-                password,
-                username.toLowerCase(),
-                id,
-                email).replaceAll("\\s+", "");
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line;
@@ -136,15 +148,6 @@ public class RegistrationController {
                     line = line.trim();
                     if (line.isEmpty()) continue;
                     
-                    // Normalización de la línea existente
-                    String normalizedLine = line.toLowerCase().replaceAll("\\s+", "");
-                    
-                    // Comparación exacta
-                    if (normalizedLine.equals(newEntryNormalized)) {
-                        return "Este usuario ya está registrado idénticamente en el sistema";
-                    }
-                    
-                    // Comparación por campos individuales
                     String[] parts = line.split("\\|");
                     if (parts.length >= 6) {
                         // Verificar email
@@ -163,6 +166,12 @@ public class RegistrationController {
                                 return "La cédula ya está registrada";
                             }
                         }
+                        
+                        // Verificar nombre de usuario
+                        String existingUsername = parts[1].trim().toLowerCase();
+                        if (existingUsername.equals(username.toLowerCase())) {
+                            return "El nombre de usuario ya está en uso";
+                        }
                     }
                 }
             }
@@ -170,10 +179,11 @@ public class RegistrationController {
         }
 
         private void saveUserData(String data) throws IOException {
-            try (BufferedWriter writer = new BufferedWriter(
-                new FileWriter(USERS_FILE, true))) {
-                
-                if (new File(USERS_FILE).length() > 0) {
+            File file = new File(USERS_FILE);
+            boolean fileExists = file.exists() && file.length() > 0;
+            
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
+                if (fileExists) {
                     writer.newLine();
                 }
                 writer.write(data);
@@ -182,9 +192,18 @@ public class RegistrationController {
         }
 
         private void handleRegistrationError(Exception ex) {
-            System.err.println("ERROR EN REGISTRO: " + ex.getMessage());
-            view.showError("Error al registrar: " + ex.getMessage());
+            String errorMsg = "Error al registrar: " + ex.getMessage();
+            System.err.println("ERROR EN REGISTRO: " + errorMsg);
             ex.printStackTrace();
+            
+            // Mostrar mensaje de error más amigable
+            if (ex instanceof IOException) {
+                errorMsg = "Error al acceder a la base de datos. Intente nuevamente.";
+            } else if (ex instanceof SecurityException) {
+                errorMsg = "Problema de permisos. Contacte al administrador.";
+            }
+            
+            JOptionPane.showMessageDialog(view, errorMsg, "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println("Ruta actual del archivo: " + USERS_FILE);
             System.out.println("El archivo existe: " + new File(USERS_FILE).exists());
         }

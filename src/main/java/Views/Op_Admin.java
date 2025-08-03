@@ -4,23 +4,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class Op_Usuario extends JFrame {
+public class Op_Admin extends JFrame {
     private JButton botonReserva;
+    private JButton botonHistorial;
     private JButton botonRecargar;
     private JButton botonSalir;
     private JButton botonAdminMenu;
     
-    public Op_Usuario(String usuario, boolean esAdmin) {
+    public Op_Admin(String usuario, boolean esAdmin) {
         initComponents(usuario, esAdmin);
     }
 
     private void initComponents(String usuario, boolean esAdmin) {
-        setTitle("Panel de Usuario - " + usuario);
+        setTitle("Panel de Administración - " + usuario);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 400); // Reducido el tamaño al eliminar un botón
+        setSize(400, 500);
         setResizable(false);
 
-        Color colorFondo = new Color(91, 64, 7); // Color diferente para usuario
+        Color colorFondo = new Color(7, 64, 91); // Azul oscuro para admin
         Color colorTexto = new Color(240, 240, 240);
 
         JPanel panelPrincipal = new JPanel();
@@ -28,14 +29,14 @@ public class Op_Usuario extends JFrame {
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
         panelPrincipal.setBackground(colorFondo);
 
-        JLabel nombreUsuario = new JLabel("USUARIO: " + usuario);
+        JLabel nombreUsuario = new JLabel("ADMIN: " + usuario);
         nombreUsuario.setFont(new Font("Arial", Font.BOLD, 16));
         nombreUsuario.setForeground(colorTexto);
         nombreUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPrincipal.add(nombreUsuario);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JLabel titulo = new JLabel("PANEL DE USUARIO");
+        JLabel titulo = new JLabel("PANEL DE ADMINISTRACIÓN");
         titulo.setFont(new Font("Arial", Font.BOLD, 18));
         titulo.setForeground(colorTexto);
         titulo.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -46,12 +47,16 @@ public class Op_Usuario extends JFrame {
         panelPrincipal.add(botonReserva);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
+        botonHistorial = crearBoton("CALCULADORA CCB");
+        panelPrincipal.add(botonHistorial);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+
         botonRecargar = crearBoton("RECARGAR MONEDERO");
         panelPrincipal.add(botonRecargar);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
         botonAdminMenu = crearBoton("ADMINISTRAR MENÚS");
-        botonAdminMenu.setVisible(esAdmin);
+        botonAdminMenu.setVisible(true); // Siempre visible para admin
         panelPrincipal.add(botonAdminMenu);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
@@ -61,7 +66,6 @@ public class Op_Usuario extends JFrame {
         add(panelPrincipal);
         setLocationRelativeTo(null);
     }
-
     private JButton crearBoton(String texto) {
         JButton boton = new JButton(texto);
         boton.setMaximumSize(new Dimension(300, 50));
@@ -76,6 +80,10 @@ public class Op_Usuario extends JFrame {
         botonReserva.addActionListener(listener);
     }
 
+    public void addHistorialListener(ActionListener listener) {
+        botonHistorial.addActionListener(listener);
+    }
+
     public void addRecargarListener(ActionListener listener) {
         botonRecargar.addActionListener(listener);
     }
@@ -84,12 +92,12 @@ public class Op_Usuario extends JFrame {
         botonSalir.addActionListener(listener);
     }
 
-    public void mostrarMensaje(String mensaje, String titulo) {
-        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
-    }
-
     public void addAdminMenuListener(ActionListener listener) {
         botonAdminMenu.addActionListener(listener);
+    }
+
+    public void mostrarMensaje(String mensaje, String titulo) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void cerrarVentana() {
