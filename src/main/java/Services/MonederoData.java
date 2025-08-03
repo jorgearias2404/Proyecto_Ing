@@ -53,12 +53,12 @@ public class MonederoData {
             }
             System.err.println(recargas.length);
             for(int i = 0; i < recargas.length - 1; i++) {
-                writer.write(recargas[i] + " #");
+                writer.write(recargas[i] + "#");
                 writer.newLine();
             }
             
             String fecha = "[" + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()) + "]";
-            writer.write("\\n " + fecha + " Visita al comedor: $-" + ccb);
+            writer.write("\\n " + fecha + " Visita al comedor: $-" + ccb + "  #");
             writer.newLine();
             writer.write("\\n");
             

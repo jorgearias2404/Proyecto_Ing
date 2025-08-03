@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import javax.swing.JOptionPane;
 
@@ -54,6 +55,9 @@ public class ControladorImagen implements ActionListener {
                             ccb -= (ccb * getDiscount());
                             if(saldo - ccb >= 0) {
                                 saldo -= ccb;
+                                DecimalFormat df = new DecimalFormat("#.00");
+                                String formattedValue = df.format(saldo);
+                                saldo = Double.parseDouble(formattedValue);
                                 monedero.actualizarSaldo(saldo, ccb);
                                 JOptionPane.showMessageDialog(null, "Reconocimiento y cobro exitoso!", "Éxito", JOptionPane.INFORMATION_MESSAGE);
                             } else {
