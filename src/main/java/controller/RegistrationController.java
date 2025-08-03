@@ -57,15 +57,11 @@ public class RegistrationController {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                // Check if admin role is selected
+                // Validación de rol administrador
                 if (view.getRole().equals("Administrador")) {
                     String adminPassword = view.showAdminPasswordDialog();
-                    if (adminPassword == null) {
-                        // User cancelled the dialog
-                        return;
-                    }
+                    if (adminPassword == null) return;
                     
-                    // Validate admin password
                     ValidarFormularioRegistro validator = new ValidarFormularioRegistro();
                     if (!validator.validateAdminPassword(adminPassword)) {
                         view.showError("Contraseña de administrador incorrecta");
@@ -73,6 +69,7 @@ public class RegistrationController {
                     }
                 }
                 
+                // Validación del formulario
                 ValidarFormularioRegistro val = new ValidarFormularioRegistro();
                 if(!val.validateForm(view.getEmail(), view.getPassword(), 
                    view.getUsername(), view.getID(), view.getRole())) {
@@ -80,30 +77,35 @@ public class RegistrationController {
                     return;
                 }
 
-                if (isEmailRegistered(view.getEmail())) {
-                    view.showError("Ya existe un usuario registrado con este correo");
+                // Normalización de datos
+                String email = view.getEmail().trim().toLowerCase();
+                String id = view.getID().trim();
+                String username = view.getUsername().trim();
+                String password = view.getPassword();
+                String role = view.getRole().equals("Administrador") ? "admin" : "user";
+
+                // Verificación de duplicados
+                String duplicateError = checkForDuplicates(email, id, username, password, role);
+                if (duplicateError != null) {
+                    view.showError(duplicateError);
                     return;
                 }
 
-                if (isIDRegistered(view.getID())) {
-                    view.showError("Ya existe un usuario registrado con esta cédula");
-                    return;
-                }
-
+                // Creación del registro
                 String userData = String.format("%s|%s|%s|%s (%s)|%s",
-                    view.getRole().equals("Administrador") ? "admin" : "user",
-                    view.getUsername(),
-                    view.getPassword(),
-                    view.getUsername(),
-                    view.getID(),
-                    view.getEmail());
+                    role,
+                    username,
+                    password,
+                    username,
+                    id,
+                    email);
 
                 saveUserData(userData);
                 
                 view.showMessage("¡Registro exitoso!", "Éxito");
                 view.close();
                 
-                // Regresar al login después de registrar
+                // Volver al login
                 SwingUtilities.invokeLater(() -> {
                     Login login = new Login();
                     new LoginController(login);
@@ -115,43 +117,56 @@ public class RegistrationController {
             }
         }
 
-        private boolean isEmailRegistered(String email) throws IOException {
-            return checkIfExistsInFile(email, 5);
-        }
-
-        private boolean isIDRegistered(String id) throws IOException {
-            return checkIfExistsInFile(id, 4);
-        }
-
-        private boolean checkIfExistsInFile(String value, int position) throws IOException {
+        private String checkForDuplicates(String email, String id, String username, String password, String role) throws IOException {
             File file = new File(USERS_FILE);
-            if (!file.exists()) return false;
+            if (!file.exists()) return null;
+
+            // Prepara el nuevo registro normalizado para comparación
+            String newEntryNormalized = String.format("%s|%s|%s|%s(%s)|%s",
+                role,
+                username.toLowerCase(),
+                password,
+                username.toLowerCase(),
+                id,
+                email).replaceAll("\\s+", "");
 
             try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
+                    line = line.trim();
+                    if (line.isEmpty()) continue;
+                    
+                    // Normalización de la línea existente
+                    String normalizedLine = line.toLowerCase().replaceAll("\\s+", "");
+                    
+                    // Comparación exacta
+                    if (normalizedLine.equals(newEntryNormalized)) {
+                        return "Este usuario ya está registrado idénticamente en el sistema";
+                    }
+                    
+                    // Comparación por campos individuales
                     String[] parts = line.split("\\|");
-                    if (parts.length > position) {
-                        if (position == 4) {
-                            String idPart = parts[4];
-                            try {
-                                int start = idPart.indexOf("(");
-                                int end = idPart.indexOf(")");
-                                if (start != -1 && end != -1 && end > start) {
-                                    String idValue = idPart.substring(start + 1, end);
-                                    if (idValue.equals(value)) return true;
-                                }
-                            } catch (StringIndexOutOfBoundsException e) {
-                                System.err.println("Error procesando cédula en línea: " + line);
-                                continue;
+                    if (parts.length >= 6) {
+                        // Verificar email
+                        String existingEmail = parts[5].trim().toLowerCase();
+                        if (existingEmail.equals(email)) {
+                            return "El correo electrónico ya está registrado";
+                        }
+                        
+                        // Verificar cédula
+                        String namePart = parts[3].trim();
+                        int start = namePart.indexOf("(");
+                        int end = namePart.indexOf(")");
+                        if (start != -1 && end != -1) {
+                            String existingId = namePart.substring(start + 1, end).trim();
+                            if (existingId.equals(id)) {
+                                return "La cédula ya está registrada";
                             }
-                        } else if (parts[position].equals(value)) {
-                            return true;
                         }
                     }
                 }
             }
-            return false;
+            return null;
         }
 
         private void saveUserData(String data) throws IOException {
@@ -170,7 +185,6 @@ public class RegistrationController {
             System.err.println("ERROR EN REGISTRO: " + ex.getMessage());
             view.showError("Error al registrar: " + ex.getMessage());
             ex.printStackTrace();
-            
             System.out.println("Ruta actual del archivo: " + USERS_FILE);
             System.out.println("El archivo existe: " + new File(USERS_FILE).exists());
         }
