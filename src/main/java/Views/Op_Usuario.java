@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 
 public class Op_Usuario extends JFrame {
     private JButton botonReserva;
-    private JButton botonHistorial;
     private JButton botonRecargar;
     private JButton botonSalir;
     private JButton botonAdminMenu;
@@ -18,7 +17,7 @@ public class Op_Usuario extends JFrame {
     private void initComponents(String usuario, boolean esAdmin) {
         setTitle("Panel de Usuario - " + usuario);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(400, 500);
+        setSize(400, 400); // Reducido el tamaño al eliminar un botón
         setResizable(false);
 
         Color colorFondo = new Color(91, 64, 7); // Color diferente para usuario
@@ -47,16 +46,12 @@ public class Op_Usuario extends JFrame {
         panelPrincipal.add(botonReserva);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        botonHistorial = crearBoton("CALCULADORA CCB");
-        panelPrincipal.add(botonHistorial);
-        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
-
         botonRecargar = crearBoton("RECARGAR MONEDERO");
         panelPrincipal.add(botonRecargar);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
         botonAdminMenu = crearBoton("ADMINISTRAR MENÚS");
-        botonAdminMenu.setVisible(esAdmin); // Solo visible si es admin (aunque no debería ocurrir)
+        botonAdminMenu.setVisible(esAdmin);
         panelPrincipal.add(botonAdminMenu);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
@@ -77,19 +72,10 @@ public class Op_Usuario extends JFrame {
         return boton;
     }
 
-    // metodos para el controlador
     public void addReservaListener(ActionListener listener) {
         botonReserva.addActionListener(listener);
     }
 
-    // Metodo que se modificado en Op_Usuario
-     public void addHistorialListener(ActionListener listener) {
-         botonHistorial.addActionListener(e -> {
-        this.setVisible(false); // Oculta la ventana actual
-        CargaCCB calculadora = new CargaCCB(this); // Crea una nueva instancia de CalculadoraCCB
-        calculadora.setVisible(true);
-    });
-}
     public void addRecargarListener(ActionListener listener) {
         botonRecargar.addActionListener(listener);
     }
@@ -102,7 +88,7 @@ public class Op_Usuario extends JFrame {
         JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
     }
 
-     public void addAdminMenuListener(ActionListener listener) {
+    public void addAdminMenuListener(ActionListener listener) {
         botonAdminMenu.addActionListener(listener);
     }
 
@@ -110,5 +96,3 @@ public class Op_Usuario extends JFrame {
         this.dispose();
     }
 }
-    
-
