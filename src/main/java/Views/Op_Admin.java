@@ -43,7 +43,7 @@ public class Op_Admin extends JFrame {
         panelPrincipal.add(titulo);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        botonReserva = crearBoton("REALIZAR RESERVA");
+        botonReserva = crearBoton("MENÚ SEMANAL");
         panelPrincipal.add(botonReserva);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
@@ -66,6 +66,7 @@ public class Op_Admin extends JFrame {
         add(panelPrincipal);
         setLocationRelativeTo(null);
     }
+
     private JButton crearBoton(String texto) {
         JButton boton = new JButton(texto);
         boton.setMaximumSize(new Dimension(300, 50));

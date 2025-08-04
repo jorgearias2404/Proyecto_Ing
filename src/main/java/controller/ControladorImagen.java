@@ -105,9 +105,9 @@ public class ControladorImagen implements ActionListener {
         if(this.tipoUsuario == "Estudiante") {
             return 0.25;
         } else if(this.tipoUsuario == "Empleado") {
-            return 0.5;
+            return 0.90;
         } else {
-            return 0.4;
+            return 0.70;
         }
     }
 

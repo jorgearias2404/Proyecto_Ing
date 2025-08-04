@@ -22,12 +22,13 @@ public class MonederoData {
 
         try (BufferedReader br = new BufferedReader(new FileReader(nombreArchivo))) {
             String linea;
+            double saldo = 0;
             while ((linea = br.readLine()) != null) {
-                String[] contenido = linea.split(",", 6);
-                if (contenido.length == 6) {
-                    return Double.parseDouble(contenido[4]);
-                }
+                String[] contenido = linea.split(",");
+                saldo = Double.parseDouble(contenido[1]);
             }
+            return saldo;
+            
         } catch (IOException e) {
             System.err.println("Error al cargar datos: " + e.getMessage());
         }
@@ -36,38 +37,36 @@ public class MonederoData {
     }
 
     public void actualizarSaldo(double nuevoSaldo, double ccb) {
-        String[] nuevoContenido = actualizarSaldo_(nuevoSaldo);
+        String[] nuevoContenido = actualizarSaldo_();
         System.err.println(ccb);
-        actualizarArchivo(nuevoContenido, ccb);
+        actualizarArchivo(nuevoContenido, ccb, nuevoSaldo);
     }
 
-    private void actualizarArchivo(String[] contenido, double ccb) {
+    private void actualizarArchivo(String[] contenido, double ccb, double nuevoSaldo) {
         String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
-            for(int i = 0; i < contenido.length - 1; i++) {
+            for(int i = 0; i < contenido.length; i++) {
+                if((i+1) % 5 == 0) {
+                    System.err.println(contenido[i]);
+                    writer.write(contenido[i]);
+                    writer.newLine();
+                    continue;
+                }
                 writer.write(contenido[i] + ",");
             }
-            String[] recargas = contenido[contenido.length-1].split("#");
-            for(String i : recargas) {
-                System.err.println(i);
-            }
-            System.err.println(recargas.length);
-            for(int i = 0; i < recargas.length - 1; i++) {
-                writer.write(recargas[i] + "#");
-                writer.newLine();
-            }
+
+            //sergiogo,25.0,[03/08/25 18:43],Recarga: $5.0,Banco: Banco Provincial
             
             String fecha = "[" + new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()) + "]";
-            writer.write("\\n " + fecha + " Visita al comedor: $-" + ccb + "  #");
+            writer.write(usuarioActual + "," + nuevoSaldo + "," + fecha + "," +"Consumo: $-" + ccb + "," + "Almuerzo");
             writer.newLine();
-            writer.write("\\n");
             
         } catch (IOException e) {
             System.err.println("Error al cargar datos: " + e.getMessage());
         }
     }
 
-    private String[] actualizarSaldo_(double nuevoSaldo) {
+    private String[] actualizarSaldo_() {
         String nombreArchivo = "DataBase/monedero_" + usuarioActual + ".txt";
         new File("DataBase").mkdirs();
         String[] contenido = {};
@@ -75,13 +74,10 @@ public class MonederoData {
             String linea;
             String cont = "";
             while ((linea = br.readLine()) != null) {
-                cont += linea; 
+                cont += linea + ","; 
             }
-            contenido = cont.split(",", 6);
             System.err.println(cont);
-            if (contenido.length == 6) {
-                contenido[4] = Double.toString(nuevoSaldo);
-            }
+            contenido = cont.split(",");
             return contenido;
         } catch (IOException e) {
             System.err.println("Error al cargar datos: " + e.getMessage());

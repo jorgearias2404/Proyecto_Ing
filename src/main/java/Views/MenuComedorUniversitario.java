@@ -18,6 +18,7 @@ public class MenuComedorUniversitario extends JFrame {
 
     public void setController(MenuComedorController controller) {
         this.controller = controller;
+
     }
 
     private void initComponents() {
@@ -126,15 +127,17 @@ public class MenuComedorUniversitario extends JFrame {
         this.dispose();
     }
 
+    public void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             String usuario = "UsuarioDemo";
-        boolean esAdmin = false; // o true si es admin
-        String usuarioActual = usuario; // Simulación de usuario actual
-        MenuComedorUniversitario view = new MenuComedorUniversitario(usuarioActual);
-        MenuComedorController controller = new MenuComedorController(view, usuarioActual, esAdmin);
-        view.setController(controller);
-        view.setVisible(true);
-    });
+            boolean esAdmin = false;
+            MenuComedorUniversitario view = new MenuComedorUniversitario(usuario);
+            MenuComedorController controller = new MenuComedorController(view, usuario, esAdmin);
+            view.setVisible(true);
+        });
     }
 }
