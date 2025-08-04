@@ -1,4 +1,4 @@
 sergiogo,10.0,[03/08/25 18:42],Recarga: $10.0,Banco: Banco Nacional
 sergiogo,20.0,[03/08/25 18:42],Recarga: $10.0,Banco: Banco Provincial
 sergiogo,25.0,[03/08/25 18:43],Recarga: $5.0,Banco: Banco Provincial
-sergiogo,35.0,[03/08/25 18:44],Recarga: $10.0,Banco: Banco Nacional
+sergiogo,35.0,[03/08/25 18:44],Recarga: $10.0,Banco: Banco Nacional 
